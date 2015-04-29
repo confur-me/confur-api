@@ -7,16 +7,6 @@ import (
 
 type ConferencesController struct{}
 
-// @Title Create
-// @Description create Conference
-// @Param	body		body 	models.Conference	true		"body for Conference content"
-// @Success 200 {int} models.Conference.Id
-// @Failure 403 body is empty
-// @router / [post]
-func (this *ConferencesController) Create(c *gin.Context) {
-
-}
-
 // @Title Show
 // @Description get Conference by id
 // @Param	id		path 	string	true		"The key for staticblock"
@@ -24,7 +14,13 @@ func (this *ConferencesController) Create(c *gin.Context) {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (this *ConferencesController) Show(c *gin.Context) {
-
+	id := c.Params.ByName("id")
+	conference := models.ConferenceById(id)
+	if conference.ID > 0 {
+		c.JSON(200, conference)
+	} else {
+		c.JSON(404, "Conference not found")
+	}
 }
 
 // @Title Index
@@ -39,25 +35,4 @@ func (this *ConferencesController) Show(c *gin.Context) {
 func (this *ConferencesController) Index(c *gin.Context) {
 	conferences := models.ConferencesCollection()
 	c.JSON(200, conferences)
-}
-
-// @Title Update
-// @Description update the Conference
-// @Param	id		path 	string	true		"The id you want to update"
-// @Param	body		body 	models.Conference	true		"body for Conference content"
-// @Success 200 {object} models.Conference
-// @Failure 403 :id is not int
-// @router /:id [put]
-func (this *ConferencesController) Update(c *gin.Context) {
-
-}
-
-// @Title Destroy
-// @Description delete the Conference
-// @Param	id		path 	string	true		"The id you want to delete"
-// @Success 204 {string} delete success!
-// @Failure 403 id is empty
-// @router /:id [delete]
-func (this *ConferencesController) Destroy(c *gin.Context) {
-
 }

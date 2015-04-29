@@ -13,8 +13,6 @@ type Conference struct {
 	Events []Event
 }
 
-var resource *Conference
-
 func ConferencesCollection() []Conference {
 	var collection []Conference
 	d, err := db.Connection()
@@ -22,4 +20,13 @@ func ConferencesCollection() []Conference {
 		d.Find(&collection)
 	}
 	return collection
+}
+
+func ConferenceById(id string) Conference {
+	var resource Conference
+	d, err := db.Connection()
+	if err == nil {
+		d.Where("id = ?", id).First(&resource)
+	}
+	return resource
 }
