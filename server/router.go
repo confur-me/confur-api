@@ -23,6 +23,10 @@ func (this *Router) Initialize() {
 	videosController := &controllers.VideosController{}
 	this.engine.GET("/conferences/:id/videos", videosController.Index)
 
+	tagsController := &controllers.TagsController{}
+	this.engine.GET("/tags", tagsController.Index)
+	this.engine.GET("/tags/:slug", tagsController.Show)
+
 	//this.engine.GET("/users/sign_in", usersController.SignIn)
 	//this.engine.POST("/users/sign_in", usersController.SignIn)
 	//this.engine.GET("/users/sign_up", usersController.SignIn)

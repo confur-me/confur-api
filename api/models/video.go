@@ -12,6 +12,7 @@ type Video struct {
 	Length       int32
 	Service      string `sql:"index"`
 	ConferenceID uint   `sql:"index"`
+	Tags         []Tag  `gorm:"many2many:video_tags"`
 }
 
 func ConferenceVideosCollection(conference_id string) []Video {

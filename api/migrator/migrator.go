@@ -14,6 +14,8 @@ func DbDrop() {
 		d.DropTable(&models.Conference{})
 		d.DropTable(&models.Event{})
 		d.DropTable(&models.Video{})
+		d.DropTable(&models.Tag{})
+		d.DropTable(&models.User{})
 	}
 }
 
@@ -25,6 +27,8 @@ func DbCreate() {
 		d.CreateTable(&models.Conference{})
 		d.CreateTable(&models.Event{})
 		d.CreateTable(&models.Video{})
+		d.CreateTable(&models.Tag{})
+		d.CreateTable(&models.User{})
 	}
 }
 
@@ -37,6 +41,8 @@ func DbMigrate() {
 			&models.Conference{},
 			&models.Event{},
 			&models.Video{},
+			&models.Tag{},
+			&models.User{},
 		)
 	}
 }
