@@ -12,6 +12,7 @@ type Conference struct {
 	Type        string `sql:"index"`
 	Description string `sql:"type:text"`
 	Events      []Event
+	Videos      []Video
 }
 
 func ConferencesCollection() []Conference {
