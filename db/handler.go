@@ -32,6 +32,7 @@ func Connect() error {
 		return err
 	}
 	db.connected = true
+	db.connection.LogMode(true)
 	return nil
 }
 

@@ -1,7 +1,7 @@
 package models
 
 import (
-	//"github.com/confur-me/confur-api/core"
+	"github.com/confur-me/confur-api/db"
 	"github.com/jinzhu/gorm"
 )
 
@@ -13,9 +13,13 @@ type Conference struct {
 	Events []Event
 }
 
-var collection *[]Conference
 var resource *Conference
 
-func ConferencesCollection() *[]Conference {
+func ConferencesCollection() []Conference {
+	var collection []Conference
+	d, err := db.Connection()
+	if err == nil {
+		d.Find(&collection)
+	}
 	return collection
 }

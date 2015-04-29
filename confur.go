@@ -6,6 +6,7 @@ import (
 	"github.com/confur-me/confur-api/api/migrator"
 	"github.com/confur-me/confur-api/lib/config"
 	"github.com/confur-me/confur-api/server"
+	"github.com/confur-me/confur-api/test/fixtures"
 	"os"
 )
 
@@ -17,8 +18,11 @@ func init() {
 		config_description = "path to config file"
 		usage              = `
 Usage:
-  confur -config=/path/to/config.yml start
-  confur -config=/path/to/config.yml migrate
+  confur -config=/path/to/config.yml start : start server
+  confur -config=/path/to/config.yml db:drop : Drop database
+  confur -config=/path/to/config.yml db:create : Create database
+  confur -config=/path/to/config.yml db:migrate : Migrate database
+  confur -config=/path/to/config.yml fixtures:seed : Seed test data
 `
 	)
 	flag.Bool("h", false, help_description)
@@ -48,6 +52,8 @@ func main() {
 		migrator.DbMigrate()
 	case "db:drop":
 		migrator.DbDrop()
+	case "fixtures:seed":
+		fixtures.Seed()
 	default:
 		flag.Usage()
 	}

@@ -37,12 +37,7 @@ func (this *ConferencesController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *ConferencesController) Index(c *gin.Context) {
-	//db := core.DbConnection()
-	//conferences := &models.Conferences
-	//var conferences []models.Conference
-	//db.Find(&conferences)
-	var conferences []models.Conference
-	conferences = make([]models.Conference, 2)
+	conferences := models.ConferencesCollection()
 	c.JSON(200, conferences)
 }
 
