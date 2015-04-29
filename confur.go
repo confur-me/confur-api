@@ -3,8 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/confur-me/confur-api/app"
+	"github.com/confur-me/confur-api/api/migrator"
 	"github.com/confur-me/confur-api/lib/config"
+	"github.com/confur-me/confur-api/server"
 	"os"
 )
 
@@ -39,11 +40,14 @@ func main() {
 
 	switch args[0] {
 	case "start":
-		app := app.Application{}
+		app := server.Application{}
 		app.Run()
-	case "migrate":
-		//migrations.DbMigrate()
-		panic("Not implemented yet")
+	case "db:create":
+		migrator.DbCreate()
+	case "db:migrate":
+		migrator.DbMigrate()
+	case "db:drop":
+		migrator.DbDrop()
 	default:
 		flag.Usage()
 	}

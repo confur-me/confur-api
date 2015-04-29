@@ -1,7 +1,7 @@
-package app
+package server
 
 import (
-	"github.com/confur-me/confur-api/app/controllers"
+	"github.com/confur-me/confur-api/api/controllers"
 	"github.com/gin-gonic/gin"
 )
 

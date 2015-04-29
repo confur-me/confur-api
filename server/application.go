@@ -1,4 +1,4 @@
-package app
+package server
 
 import (
 	"github.com/confur-me/confur-api/lib/config"

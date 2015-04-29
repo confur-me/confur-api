@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"github.com/confur-me/confur-api/api/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -36,9 +37,13 @@ func (this *ConferencesController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *ConferencesController) Index(c *gin.Context) {
-	// TODO: Orm fetch
-
-	//c.JSON(200, api)
+	//db := core.DbConnection()
+	//conferences := &models.Conferences
+	//var conferences []models.Conference
+	//db.Find(&conferences)
+	var conferences []models.Conference
+	conferences = make([]models.Conference, 2)
+	c.JSON(200, conferences)
 }
 
 // @Title Update
