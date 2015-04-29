@@ -1,8 +1,8 @@
 package db
 
 import (
-	//"github.com/confur-me/confur-api/lib/config"
-	//"fmt"
+	"fmt"
+	"github.com/confur-me/confur-api/lib/config"
 	"github.com/jinzhu/gorm"
 	_ "github.com/lib/pq"
 )
@@ -24,11 +24,19 @@ func init() {
 }
 
 func Connect() error {
-	//db_config := config.GetStringMapString("db")
+	db_config := config.GetStringMapString("db")
+	connection_string := "host=" + db_config["host"] +
+		" port=" + db_config["port"] +
+		" user=" + db_config["user"] +
+		" dbname=" + db_config["database"] +
+		" sslmode=" + db_config["ssl"] +
+		" password=" + db_config["password"]
+
 	var err error
-	db.connection, err = gorm.Open("postgres", "user=postgres dbname=confur sslmode=disable")
+	db.connection, err = gorm.Open("postgres", connection_string)
 	if err != nil {
 		db.connected = false
+		fmt.Println("Unable to connect to database")
 		return err
 	}
 	db.connected = true
