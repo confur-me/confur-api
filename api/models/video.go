@@ -6,7 +6,8 @@ import (
 
 type Video struct {
 	gorm.Model
-	Title  string
-	Url    string
-	Length int32
+	Title   string
+	Url     string
+	Length  int32
+	Service string `sql:"index"`
 }

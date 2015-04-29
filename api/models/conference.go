@@ -7,10 +7,11 @@ import (
 
 type Conference struct {
 	gorm.Model
-	Title  string
-	Url    string
-	Type   string `sql:"index"`
-	Events []Event
+	Title       string
+	Url         string
+	Type        string `sql:"index"`
+	Description string `sql:"type:text"`
+	Events      []Event
 }
 
 func ConferencesCollection() []Conference {

@@ -16,4 +16,8 @@ func (this *Router) Initialize() {
 	conferencesController := &controllers.ConferencesController{}
 	this.engine.GET("/conferences", conferencesController.Index)
 	this.engine.GET("/conferences/:id", conferencesController.Show)
+
+	eventsController := &controllers.EventsController{}
+	this.engine.GET("/conferences/:id/events", eventsController.Index)
+
 }
