@@ -33,6 +33,6 @@ func (this *ConferencesController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *ConferencesController) Index(c *gin.Context) {
-	conferences := models.ConferencesCollection()
+	conferences := models.Conferences()
 	c.JSON(200, conferences)
 }

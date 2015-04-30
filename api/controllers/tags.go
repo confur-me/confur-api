@@ -30,6 +30,6 @@ func (this *TagsController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *TagsController) Index(c *gin.Context) {
-	tags := models.TagsCollection()
+	tags := models.Tags()
 	c.JSON(200, tags)
 }

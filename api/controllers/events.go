@@ -34,6 +34,9 @@ func (this *EventsController) Show(c *gin.Context) {
 // @router / [get]
 func (this *EventsController) Index(c *gin.Context) {
 	conference_id := c.Params.ByName("id")
-	events := models.ConferenceEventsCollection(conference_id)
+	events := models.EventsByConference(conference_id)
+	if len(events) == 0 {
+		events = make([]models.Event, 0)
+	}
 	c.JSON(200, events)
 }

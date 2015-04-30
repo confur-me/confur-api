@@ -2,19 +2,21 @@ package models
 
 import (
 	"github.com/confur-me/confur-api/db"
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
 type Event struct {
-	gorm.Model
-	ConferenceID uint   `sql:"index"`
+	ID           uint `gorm:"primary_key"`
+	ConferenceID uint `sql:"index"`
+	Country      string
+	City         string
+	State        string
 	Address      string `sql:"type:text"`
 	Description  string `sql:"type:text"`
-	StartedAt    *time.Time
+	StartedAt    time.Time
 }
 
-func ConferenceEventsCollection(conference_id string) []Event {
+func EventsByConference(conference_id string) []Event {
 	var collection []Event
 	d, err := db.Connection()
 	if err == nil {

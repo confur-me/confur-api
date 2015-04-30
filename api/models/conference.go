@@ -2,11 +2,10 @@ package models
 
 import (
 	"github.com/confur-me/confur-api/db"
-	"github.com/jinzhu/gorm"
 )
 
 type Conference struct {
-	gorm.Model
+	ID          uint `gorm:"primary_key"`
 	Title       string
 	Url         string
 	Type        string `sql:"index"`
@@ -15,7 +14,7 @@ type Conference struct {
 	Videos      []Video
 }
 
-func ConferencesCollection() []Conference {
+func Conferences() []Conference {
 	var collection []Conference
 	d, err := db.Connection()
 	if err == nil {

@@ -26,11 +26,29 @@ func (this *VideosController) Show(c *gin.Context) {
 // @Title Index
 // @Description get Video
 // @Param	id		path 	string	true
-// @Success 200 {object} models.Video
+// @Success 200 {object} []models.Video
 // @Failure 403
 // @router / [get]
 func (this *VideosController) Index(c *gin.Context) {
 	conference_id := c.Params.ByName("id")
-	videos := models.ConferenceVideosCollection(conference_id)
+	videos := models.VideosByConference(conference_id)
+	if len(videos) == 0 {
+		videos = make([]models.Video, 0)
+	}
+	c.JSON(200, videos)
+}
+
+// @Title ByTag
+// @Description get Video
+// @Param	tag		path 	string	true
+// @Success 200 {object} []models.Video
+// @Failure 403
+// @router / [get]
+func (this *VideosController) ByTag(c *gin.Context) {
+	tag := c.Params.ByName("tag")
+	videos := models.VideosByTag(tag)
+	if len(videos) == 0 {
+		videos = make([]models.Video, 0)
+	}
 	c.JSON(200, videos)
 }
