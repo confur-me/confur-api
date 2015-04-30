@@ -22,7 +22,7 @@ func (this *Router) Initialize() {
 
 	videosController := &controllers.VideosController{}
 	this.engine.GET("/conferences/:id/videos", videosController.Index)
-	this.engine.GET("/videos/tag/:tag", videosController.ByTag)
+	this.engine.GET("/videos/tag/:slug", videosController.ByTag)
 
 	tagsController := &controllers.TagsController{}
 	this.engine.GET("/tags", tagsController.Index)

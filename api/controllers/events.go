@@ -33,8 +33,8 @@ func (this *EventsController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *EventsController) Index(c *gin.Context) {
-	conference_id := c.Params.ByName("id")
-	events := models.EventsByConference(conference_id)
+	conferenceId := c.Params.ByName("id")
+	events := models.EventsByConference(conferenceId)
 	if len(events) == 0 {
 		events = make([]models.Event, 0)
 	}

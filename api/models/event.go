@@ -16,11 +16,11 @@ type Event struct {
 	StartedAt    time.Time
 }
 
-func EventsByConference(conference_id string) []Event {
+func EventsByConference(conferenceId string) []Event {
 	var collection []Event
 	d, err := db.Connection()
 	if err == nil {
-		d.Where("conference_id = ?", conference_id).Find(&collection)
+		d.Where("conference_id = ?", conferenceId).Find(&collection)
 	}
 	return collection
 }

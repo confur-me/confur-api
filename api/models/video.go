@@ -15,11 +15,11 @@ type Video struct {
 	Tags         []Tag  `gorm:"many2many:video_tags"`
 }
 
-func VideosByConference(conference_id string) []Video {
+func VideosByConference(conferenceId string) []Video {
 	var collection []Video
 	d, err := db.Connection()
 	if err == nil {
-		d.Where("conference_id = ?", conference_id).Find(&collection)
+		d.Where("conference_id = ?", conferenceId).Find(&collection)
 	}
 	return collection
 }
@@ -33,12 +33,12 @@ func VideoById(id string) Video {
 	return resource
 }
 
-func VideosByTag(tag_slug string) []Video {
+func VideosByTag(tagSlug string) []Video {
 	var collection []Video
 	var tag Tag
 	d, err := db.Connection()
 	if err == nil {
-		d.Find(&tag, "slug = ?", tag_slug)
+		d.Find(&tag, "slug = ?", tagSlug)
 		if tag.ID > 0 {
 			d.Model(&tag).Related(&collection, "Videos")
 		}
