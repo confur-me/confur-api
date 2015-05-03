@@ -14,8 +14,8 @@ type ConferencesController struct{}
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (this *ConferencesController) Show(c *gin.Context) {
-	id := c.Params.ByName("id")
-	conference := models.ConferenceById(id)
+	slug := c.Params.ByName("slug")
+	conference := models.ConferenceBySlug(slug)
 	if conference.ID > 0 {
 		c.JSON(200, conference)
 	} else {

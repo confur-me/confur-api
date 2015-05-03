@@ -5,10 +5,11 @@ import (
 )
 
 type Tag struct {
-	ID     uint   `sql:"primary_key"`
-	Slug   string `sql:"index"`
-	Title  string
-	Videos []Video `gorm:"many2many:video_tags"`
+	ID          uint   `sql:"primary_key"`
+	Slug        string `sql:"index"`
+	Title       string
+	Videos      []Video `gorm:"many2many:video_tags"`
+	VideosCount int
 }
 
 func TagBySlug(slug string) Tag {

@@ -30,8 +30,8 @@ func (this *VideosController) Show(c *gin.Context) {
 // @Failure 403
 // @router / [get]
 func (this *VideosController) Index(c *gin.Context) {
-	conferenceId := c.Params.ByName("id")
-	videos := models.VideosByConference(conferenceId)
+	conferenceSlug := c.Params.ByName("slug")
+	videos := models.VideosByConference(conferenceSlug)
 	if len(videos) == 0 {
 		videos = make([]models.Video, 0)
 	}

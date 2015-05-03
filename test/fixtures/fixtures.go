@@ -25,6 +25,7 @@ func Seed() {
 		}
 
 		conferences := []models.Conference{{
+			Slug:        "moscowjs",
 			Title:       "MoscowJS",
 			Url:         "http://moscowjs.ru",
 			Type:        "meetup",
@@ -44,6 +45,7 @@ func Seed() {
 			}},
 		},
 			{
+				Slug:   "railsclub",
 				Title:  "Rails Club",
 				Url:    "http://gay.org",
 				Type:   "conference",

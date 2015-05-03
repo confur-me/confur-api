@@ -10,16 +10,25 @@ type Video struct {
 	Title        string
 	Url          string
 	Length       int32
-	Service      string `sql:"index"`
+	Description  string
+	Service      string `sql:"index:idx_service_service_id"`
+	ServiceID    string `sql:"index:idx_service_service_id"`
 	ConferenceID uint   `sql:"index"`
 	Tags         []Tag  `gorm:"many2many:video_tags"`
+	LikesCount   int8
 }
 
-func VideosByConference(conferenceId string) []Video {
+// TODO: inject likes count
+
+func VideosByConference(conferenceSlug string) []Video {
 	var collection []Video
+	var conference Conference
 	d, err := db.Connection()
 	if err == nil {
-		d.Where("conference_id = ?", conferenceId).Find(&collection)
+		d.Find(&conference, "slug = ?", conferenceSlug)
+		if conference.ID > 0 {
+			d.Where("conference_id = ?", conference.ID).Find(&collection)
+		}
 	}
 	return collection
 }

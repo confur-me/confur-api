@@ -5,13 +5,15 @@ import (
 )
 
 type Conference struct {
-	ID          uint `gorm:"primary_key"`
+	ID          uint   `gorm:"primary_key"`
+	Slug        string `sql:"index"`
 	Title       string
 	Url         string
 	Type        string `sql:"index"`
 	Description string `sql:"type:text"`
 	Events      []Event
 	Videos      []Video
+	VideosCount int
 }
 
 func Conferences() []Conference {
@@ -23,11 +25,11 @@ func Conferences() []Conference {
 	return collection
 }
 
-func ConferenceById(id string) Conference {
+func ConferenceBySlug(slug string) Conference {
 	var resource Conference
 	d, err := db.Connection()
 	if err == nil {
-		d.Where("id = ?", id).First(&resource)
+		d.Where("slug = ?", slug).First(&resource)
 	}
 	return resource
 }

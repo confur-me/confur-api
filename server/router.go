@@ -15,13 +15,13 @@ func (this *Router) Initialize() {
 
 	conferencesController := &controllers.ConferencesController{}
 	this.engine.GET("/conferences", conferencesController.Index)
-	this.engine.GET("/conferences/:id", conferencesController.Show)
+	this.engine.GET("/conferences/:slug", conferencesController.Show)
 
 	eventsController := &controllers.EventsController{}
-	this.engine.GET("/conferences/:id/events", eventsController.Index)
+	this.engine.GET("/conferences/:slug/events", eventsController.Index)
 
 	videosController := &controllers.VideosController{}
-	this.engine.GET("/conferences/:id/videos", videosController.Index)
+	this.engine.GET("/conferences/:slug/videos", videosController.Index)
 	this.engine.GET("/videos/tag/:slug", videosController.ByTag)
 
 	tagsController := &controllers.TagsController{}
