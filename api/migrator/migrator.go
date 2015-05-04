@@ -1,15 +1,16 @@
 package migrator
 
 import (
-	"fmt"
+	log "github.com/Sirupsen/logrus"
 	"github.com/confur-me/confur-api/api/models"
 	"github.com/confur-me/confur-api/db"
+	_ "github.com/confur-me/confur-api/lib/logrus"
 )
 
 func DbDrop() {
 	d, err := db.Connection()
 	if err != nil {
-		fmt.Println("Db connection error", err)
+		log.Error(err)
 	} else {
 		d.DropTable(&models.Conference{})
 		d.DropTable(&models.Event{})
@@ -22,7 +23,7 @@ func DbDrop() {
 func DbCreate() {
 	d, err := db.Connection()
 	if err != nil {
-		fmt.Println("Db connection error", err)
+		log.Error(err)
 	} else {
 		d.CreateTable(&models.Conference{})
 		d.CreateTable(&models.Event{})
@@ -35,7 +36,7 @@ func DbCreate() {
 func DbMigrate() {
 	d, err := db.Connection()
 	if err != nil {
-		fmt.Println("Db connection error", err)
+		log.Error(err)
 	} else {
 		d.AutoMigrate(
 			&models.Conference{},

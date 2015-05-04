@@ -1,9 +1,10 @@
 package server
 
 import (
-	//"bytes"
 	"github.com/confur-me/confur-api/lib/config"
+	_ "github.com/confur-me/confur-api/lib/logrus"
 	"github.com/gin-gonic/gin"
+	"github.com/stephenmuss/ginerus"
 )
 
 type Application struct {
@@ -11,14 +12,15 @@ type Application struct {
 }
 
 func (this *Application) Run() {
-	// TODO: use file output for logger
-	//gin.DefaultWriter = bytes.NewWriter("development.log")
-	this.Engine = gin.Default()
+	this.Engine = gin.New()
+	this.Engine.Use(ginerus.Ginerus())
+	this.Engine.Use(gin.Recovery())
+
 	router := Router{this.Engine}
 	router.Initialize()
 
 	this.Engine.Run(
-		config.GetString("host") +
+		config.Config().UString("host", "0.0.0.0") +
 			":" +
-			config.GetString("port"))
+			config.Config().UString("port", "8080"))
 }

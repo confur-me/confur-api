@@ -2,17 +2,17 @@ package models
 
 import (
 	"github.com/confur-me/confur-api/db"
-	"github.com/jinzhu/gorm"
 	"time"
 )
 
 type User struct {
-	gorm.Model
+	ID                   uint   `gorm:"primary_key"`
 	Email                string `sql:"index"`
 	Name                 string
 	Password             string
 	PasswordConfirmation string
-	ConfirmedAt          *time.Time
+	CreatedAt            time.Time
+	ConfirmedAt          time.Time
 }
 
 func UserById(id string) User {

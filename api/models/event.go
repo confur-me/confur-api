@@ -11,8 +11,10 @@ type Event struct {
 	Country      string
 	City         string
 	State        string
-	Address      string `sql:"type:text"`
-	Description  string `sql:"type:text"`
+	Address      string   `sql:"type:text"`
+	Description  string   `sql:"type:text"`
+	Authors      []Author `gorm:"many2many:events_authors"`
+	UpdatedAt    time.Time
 	StartedAt    time.Time
 }
 

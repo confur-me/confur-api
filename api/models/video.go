@@ -2,20 +2,23 @@ package models
 
 import (
 	"github.com/confur-me/confur-api/db"
-	"github.com/jinzhu/gorm"
+	"time"
 )
 
 type Video struct {
-	gorm.Model
-	Title        string
+	ID           uint   `gorm:"primary_key"`
+	Title        string `sql:"type:text"`
 	Url          string
 	Length       int32
-	Description  string
+	Description  string `sql:"type:text"`
 	Service      string `sql:"index:idx_service_service_id"`
 	ServiceID    string `sql:"index:idx_service_service_id"`
 	ConferenceID uint   `sql:"index"`
-	Tags         []Tag  `gorm:"many2many:video_tags"`
+	Tags         []Tag  `gorm:"many2many:videos_tags"`
 	LikesCount   int8
+	CreatedAt    time.Time
+	UpdatedAt    time.Time
+	AuthorID     uint `sql:"index"`
 }
 
 // TODO: inject likes count

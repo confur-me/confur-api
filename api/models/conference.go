@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/confur-me/confur-api/db"
+	"time"
 )
 
 type Conference struct {
@@ -14,6 +15,7 @@ type Conference struct {
 	Events      []Event
 	Videos      []Video
 	VideosCount int
+	UpdatedAt   time.Time
 }
 
 func Conferences() []Conference {
