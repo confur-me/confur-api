@@ -19,7 +19,7 @@ type Conference struct {
 }
 
 func Conferences() []Conference {
-	var collection []Conference
+	var collection []Conference = make([]Conference, 0)
 	d, err := db.Connection()
 	if err == nil {
 		d.Find(&collection)

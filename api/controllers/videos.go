@@ -32,9 +32,6 @@ func (this *VideosController) Show(c *gin.Context) {
 func (this *VideosController) Index(c *gin.Context) {
 	conferenceSlug := c.Params.ByName("slug")
 	videos := models.VideosByConference(conferenceSlug)
-	if len(videos) == 0 {
-		videos = make([]models.Video, 0)
-	}
 	c.JSON(200, videos)
 }
 
@@ -47,8 +44,5 @@ func (this *VideosController) Index(c *gin.Context) {
 func (this *VideosController) ByTag(c *gin.Context) {
 	tagSlug := c.Params.ByName("slug")
 	videos := models.VideosByTag(tagSlug)
-	if len(videos) == 0 {
-		videos = make([]models.Video, 0)
-	}
 	c.JSON(200, videos)
 }

@@ -24,7 +24,7 @@ type Video struct {
 // TODO: inject likes count
 
 func VideosByConference(conferenceSlug string) []Video {
-	var collection []Video
+	var collection []Video = make([]Video, 0)
 	var conference Conference
 	d, err := db.Connection()
 	if err == nil {
@@ -46,7 +46,7 @@ func VideoById(id string) Video {
 }
 
 func VideosByTag(tagSlug string) []Video {
-	var collection []Video
+	var collection []Video = make([]Video, 0)
 	var tag Tag
 	d, err := db.Connection()
 	if err == nil {

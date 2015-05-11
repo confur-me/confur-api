@@ -22,7 +22,7 @@ func TagBySlug(slug string) Tag {
 }
 
 func Tags() []Tag {
-	var collection []Tag
+	var collection []Tag = make([]Tag, 0)
 	d, err := db.Connection()
 	if err == nil {
 		d.Find(&collection)

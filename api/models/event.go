@@ -19,7 +19,7 @@ type Event struct {
 }
 
 func EventsByConference(conferenceId string) []Event {
-	var collection []Event
+	var collection []Event = make([]Event, 0)
 	d, err := db.Connection()
 	if err == nil {
 		d.Where("conference_id = ?", conferenceId).Find(&collection)

@@ -35,8 +35,5 @@ func (this *EventsController) Show(c *gin.Context) {
 func (this *EventsController) Index(c *gin.Context) {
 	conferenceSlug := c.Params.ByName("slug")
 	events := models.EventsByConference(conferenceSlug)
-	if len(events) == 0 {
-		events = make([]models.Event, 0)
-	}
 	c.JSON(200, events)
 }
