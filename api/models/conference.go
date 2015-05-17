@@ -6,15 +6,16 @@ import (
 )
 
 type Conference struct {
-	ID          uint   `gorm:"primary_key"`
-	Slug        string `sql:"index"`
-	Title       string
+	Slug        string `sql:"type:varchar(64)" gorm:"primary_key" binding:"required"`
+	Title       string `sql:"type:text" binding:"required"`
 	Url         string
-	Type        string `sql:"index"`
+	Type        string `sql:"index" binding:"required"`
 	Description string `sql:"type:text"`
 	Events      []Event
 	Videos      []Video
 	VideosCount int
+	Thumbnail   string
+	IsActive    bool `sql:"index"`
 	UpdatedAt   time.Time
 }
 

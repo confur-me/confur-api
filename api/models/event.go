@@ -6,16 +6,18 @@ import (
 )
 
 type Event struct {
-	ID           uint `gorm:"primary_key"`
-	ConferenceID uint `sql:"index"`
-	Country      string
-	City         string
-	State        string
-	Address      string   `sql:"type:text"`
-	Description  string   `sql:"type:text"`
-	Authors      []Author `gorm:"many2many:events_authors"`
-	UpdatedAt    time.Time
-	StartedAt    time.Time
+	ID             uint     `gorm:"primary_key"`
+	ConferenceSlug string   `sql:"index" binding:"required"`
+	Title          string   `sql:"type:text" binding:"required"`
+	Description    string   `sql:"type:text"`
+	Country        string   `sql:"index:idx_country_state_city_address"`
+	City           string   `sql:"index:idx_country_state_city_address"`
+	State          string   `sql:"index:idx_country_state_city_address"`
+	Address        string   `sql:"type:text;index:idx_country_state_city_address"`
+	Authors        []Author `gorm:"many2many:events_authors"`
+	UpdatedAt      time.Time
+	StartedAt      time.Time `sql:"index"`
+	DeletedAt      time.Time
 }
 
 func EventsByConference(conferenceId string) []Event {

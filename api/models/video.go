@@ -6,22 +6,33 @@ import (
 )
 
 type Video struct {
-	ID           uint   `gorm:"primary_key"`
-	Title        string `sql:"type:text"`
-	Url          string
-	Length       int32
-	Description  string `sql:"type:text"`
-	Service      string `sql:"index:idx_service_service_id"`
-	ServiceID    string `sql:"index:idx_service_service_id"`
-	ConferenceID uint   `sql:"index"`
-	Tags         []Tag  `gorm:"many2many:videos_tags"`
-	LikesCount   int8
-	CreatedAt    time.Time
-	UpdatedAt    time.Time
-	AuthorID     uint `sql:"index"`
+	ID             uint   `gorm:"primary_key"`
+	Title          string `sql:"type:text" binding:"required"`
+	Url            string
+	Length         int32
+	Description    string `sql:"type:text"`
+	Service        string `sql:"index:idx_service_service_id" binding:"required"`
+	ServiceID      string `sql:"index:idx_service_service_id" binding:"required"`
+	ConferenceSlug string `sql:"index" binding:"required"`
+	Tags           []Tag  `gorm:"many2many:videos_tags"`
+	AuthorID       uint   `sql:"index"`
+	LikesCount     int8
+	Thumbnail      string
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
+	DeletedAt      time.Time
 }
 
 // TODO: inject likes count
+
+func Videos(limit int, offset int) []Video {
+	var collection []Video = make([]Video, 0)
+	d, err := db.Connection()
+	if err == nil {
+		d.Limit(limit).Offset(offset).Find(&collection)
+	}
+	return collection
+}
 
 func VideosByConference(conferenceSlug string) []Video {
 	var collection []Video = make([]Video, 0)
@@ -29,8 +40,8 @@ func VideosByConference(conferenceSlug string) []Video {
 	d, err := db.Connection()
 	if err == nil {
 		d.Find(&conference, "slug = ?", conferenceSlug)
-		if conference.ID > 0 {
-			d.Where("conference_id = ?", conference.ID).Find(&collection)
+		if conference.Slug != "" {
+			d.Where("conference_slug = ?", conference.Slug).Find(&collection)
 		}
 	}
 	return collection

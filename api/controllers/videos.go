@@ -31,7 +31,14 @@ func (this *VideosController) Show(c *gin.Context) {
 // @router / [get]
 func (this *VideosController) Index(c *gin.Context) {
 	conferenceSlug := c.Params.ByName("slug")
-	videos := models.VideosByConference(conferenceSlug)
+	limit := 20
+	offset := 0
+	var videos []models.Video
+	if conferenceSlug != "" {
+		videos = models.VideosByConference(conferenceSlug)
+	} else {
+		videos = models.Videos(limit, offset)
+	}
 	c.JSON(200, videos)
 }
 

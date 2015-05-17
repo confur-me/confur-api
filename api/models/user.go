@@ -7,12 +7,15 @@ import (
 
 type User struct {
 	ID                   uint   `gorm:"primary_key"`
-	Email                string `sql:"index"`
+	Email                string `sql:"index" binding:"required"`
 	Name                 string
 	Password             string
 	PasswordConfirmation string
 	CreatedAt            time.Time
 	ConfirmedAt          time.Time
+	ConfirmationToken    string `sql:"type:text"`
+	SignInToken          string `sql:"type:text"`
+	ResetPasswordToken   string `sql:"type:text"`
 }
 
 func UserById(id string) User {

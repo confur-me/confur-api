@@ -16,7 +16,7 @@ type ConferencesController struct{}
 func (this *ConferencesController) Show(c *gin.Context) {
 	slug := c.Params.ByName("slug")
 	conference := models.ConferenceBySlug(slug)
-	if conference.ID > 0 {
+	if conference.Slug != "" {
 		c.JSON(200, conference)
 	} else {
 		c.JSON(404, "Conference not found")

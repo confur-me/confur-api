@@ -5,9 +5,9 @@ import (
 )
 
 type Tag struct {
-	ID          uint   `gorm:"primary_key"`
-	Slug        string `sql:"index"`
-	Title       string
+	ID          uint    `gorm:"primary_key"`
+	Slug        string  `sql:"index" binding:"required"`
+	Title       string  `binding:"required"`
 	Videos      []Video `gorm:"many2many:videos_tags"`
 	VideosCount int
 }
