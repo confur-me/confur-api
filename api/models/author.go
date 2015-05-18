@@ -15,11 +15,19 @@ type Author struct {
 	Events     []Event `gorm:"many2many:events_authors"`
 }
 
-func AuthorById(id string) Author {
-	var resource Author
-	d, err := db.Connection()
-	if err == nil {
-		d.Where("id = ?", id).First(&resource)
+type AuthorService struct {
+	service
+}
+
+func (this *AuthorService) GetAuthor() (Author, bool) {
+	var (
+		resource Author
+		success  bool
+	)
+	if d, err := db.Connection(); err == nil {
+		if v, ok := this.opts["id"]; ok {
+			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
+		}
 	}
-	return resource
+	return resource, success
 }

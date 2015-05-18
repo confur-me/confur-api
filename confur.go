@@ -6,7 +6,7 @@ import (
 	"github.com/confur-me/confur-api/api/migrator"
 	"github.com/confur-me/confur-api/lib/config"
 	"github.com/confur-me/confur-api/server"
-	"github.com/confur-me/confur-api/test/fixtures"
+	//"github.com/confur-me/confur-api/test/fixtures"
 	"os"
 )
 
@@ -53,7 +53,7 @@ func main() {
 	case "db:drop":
 		migrator.DbDrop()
 	case "fixtures:seed":
-		fixtures.Seed()
+		//fixtures.Seed()
 	default:
 		flag.Usage()
 	}

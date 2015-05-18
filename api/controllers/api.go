@@ -7,9 +7,6 @@ import (
 
 type ApiController struct{}
 
-// @Title Index
-// @Description get Api information
-// @router / [get]
 func (this *ApiController) Index(c *gin.Context) {
 	api := make(map[string]string)
 	api["version"] = config.Config().UString("api.version")

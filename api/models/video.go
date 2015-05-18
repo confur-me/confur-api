@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/confur-me/confur-api/db"
 	"time"
 )
@@ -17,54 +18,68 @@ type Video struct {
 	Tags           []Tag  `gorm:"many2many:videos_tags"`
 	AuthorID       uint   `sql:"index"`
 	LikesCount     int8
-	Thumbnail      string
+	Thumbnail      string `sql:"type:text"`
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 	DeletedAt      time.Time
 }
 
+type VideoService struct {
+	service
+}
+
+func NewVideoService(opts map[string]interface{}) *VideoService {
+	s := new(VideoService)
+	s.opts = opts
+	return s
+}
+
 // TODO: inject likes count
 
-func Videos(limit int, offset int) []Video {
-	var collection []Video = make([]Video, 0)
-	d, err := db.Connection()
-	if err == nil {
-		d.Limit(limit).Offset(offset).Find(&collection)
+func (this *VideoService) FindVideos() []Video {
+	collection := make([]Video, 0)
+	limit := 20
+	if d, err := db.Connection(); err == nil {
+		query := &d
+		//if v, ok := this.opts["tag"]; ok {
+		//var tag Tag
+		//d.Find(&tag, "slug = ?", v)
+		//if tag.ID > 0 {
+		////d.Model(&tag).Related(&collection, "Videos")
+		////query = query.Where("conference_slug = ?", v)
+		//}
+		//}
+		if v, ok := this.opts["conference"]; ok {
+			query = query.Where("conference_slug = ?", v)
+		}
+		if v, ok := this.opts["query"]; ok {
+			// FIXME: CHECK injection possibility
+			query = query.
+				Where("title ILIKE ? OR description ILIKE ?", fmt.Sprintf("%%%v%%", v), fmt.Sprintf("%%%v%%", v))
+		}
+		if v, ok := this.opts["limit"]; ok {
+			if v.(int) <= 50 {
+				limit = v.(int)
+			}
+		}
+		if v, ok := this.opts["page"]; ok {
+			offset := (v.(int) - 1) * limit
+			query = query.Offset(offset)
+		}
+		query = query.Limit(limit).Find(&collection)
 	}
 	return collection
 }
 
-func VideosByConference(conferenceSlug string) []Video {
-	var collection []Video = make([]Video, 0)
-	var conference Conference
-	d, err := db.Connection()
-	if err == nil {
-		d.Find(&conference, "slug = ?", conferenceSlug)
-		if conference.Slug != "" {
-			d.Where("conference_slug = ?", conference.Slug).Find(&collection)
+func (this *VideoService) FindVideo() (Video, bool) {
+	var (
+		resource Video
+		success  bool
+	)
+	if d, err := db.Connection(); err == nil {
+		if v, ok := this.opts["id"]; ok {
+			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
 		}
 	}
-	return collection
-}
-
-func VideoById(id string) Video {
-	var resource Video
-	d, err := db.Connection()
-	if err == nil {
-		d.Where("id = ?", id).First(&resource)
-	}
-	return resource
-}
-
-func VideosByTag(tagSlug string) []Video {
-	var collection []Video = make([]Video, 0)
-	var tag Tag
-	d, err := db.Connection()
-	if err == nil {
-		d.Find(&tag, "slug = ?", tagSlug)
-		if tag.ID > 0 {
-			d.Model(&tag).Related(&collection, "Videos")
-		}
-	}
-	return collection
+	return resource, success
 }

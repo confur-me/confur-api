@@ -20,20 +20,35 @@ type Event struct {
 	DeletedAt      time.Time
 }
 
-func EventsByConference(conferenceId string) []Event {
-	var collection []Event = make([]Event, 0)
-	d, err := db.Connection()
-	if err == nil {
-		d.Where("conference_id = ?", conferenceId).Find(&collection)
-	}
-	return collection
+type EventService struct {
+	service
 }
 
-func EventById(id string) Event {
-	var resource Event
-	d, err := db.Connection()
-	if err == nil {
-		d.Where("id = ?", id).First(&resource)
+func NewEventService(opts map[string]interface{}) *EventService {
+	s := new(EventService)
+	s.opts = opts
+	return s
+}
+
+func (this *EventService) FindEvent() (Event, bool) {
+	var (
+		resource Event
+		success  bool
+	)
+	if d, err := db.Connection(); err == nil {
+		if v, ok := this.opts["event"]; ok {
+			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
+		}
 	}
-	return resource
+	return resource, success
+}
+
+func (this *EventService) FindEvents() []Event {
+	collection := make([]Event, 0)
+	if d, err := db.Connection(); err == nil {
+		if v, ok := this.opts["conference"]; ok {
+			d.Where("conference_slug = ?", v).Find(&collection)
+		}
+	}
+	return collection
 }

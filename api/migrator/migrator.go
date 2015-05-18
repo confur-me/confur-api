@@ -12,7 +12,7 @@ func DbDrop() {
 	if err != nil {
 		log.Error(err)
 	} else {
-		d.DropTable(&models.Conference{})
+		d.DropTable(&models.ConferenceService{})
 		d.DropTable(&models.Event{})
 		d.DropTable(&models.Video{})
 		d.DropTable(&models.Tag{})
@@ -25,7 +25,7 @@ func DbCreate() {
 	if err != nil {
 		log.Error(err)
 	} else {
-		d.CreateTable(&models.Conference{})
+		d.CreateTable(&models.ConferenceService{})
 		d.CreateTable(&models.Event{})
 		d.CreateTable(&models.Video{})
 		d.CreateTable(&models.Tag{})
@@ -39,7 +39,7 @@ func DbMigrate() {
 		log.Error(err)
 	} else {
 		d.AutoMigrate(
-			&models.Conference{},
+			&models.ConferenceService{},
 			&models.Event{},
 			&models.Video{},
 			&models.Tag{},

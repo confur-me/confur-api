@@ -10,28 +10,30 @@ type Router struct {
 }
 
 func (this *Router) Initialize() {
-	apiController := &controllers.ApiController{}
-	this.engine.GET("/api", apiController.Index)
+	api := this.engine.Group("/api")
+	{
+		apiController := &controllers.ApiController{}
+		videosController := &controllers.VideosController{}
+		conferencesController := &controllers.ConferencesController{}
+		eventsController := &controllers.EventsController{}
+		tagsController := &controllers.TagsController{}
 
-	conferencesController := &controllers.ConferencesController{}
-	this.engine.GET("/conferences", conferencesController.Index)
-	this.engine.GET("/conferences/:slug", conferencesController.Show)
+		api.GET("/", apiController.Index)
 
-	eventsController := &controllers.EventsController{}
-	this.engine.GET("/conferences/:slug/events", eventsController.Index)
+		api.GET("/conferences", conferencesController.Index)
+		api.GET("/conferences/:conference", conferencesController.Show)
+		api.GET("/conferences/:conference/events", eventsController.Index)
+		api.GET("/conferences/:conference/videos", videosController.Index)
 
-	videosController := &controllers.VideosController{}
-	this.engine.GET("/conferences/:slug/videos", videosController.Index)
-	this.engine.GET("/videos/tag/:slug", videosController.ByTag)
+		api.GET("/events", eventsController.Index)
+		api.GET("/events/:event", eventsController.Show)
+		api.GET("/events/:event/videos", videosController.Index)
 
-	tagsController := &controllers.TagsController{}
-	this.engine.GET("/tags", tagsController.Index)
-	this.engine.GET("/tags/:slug", tagsController.Show)
+		api.GET("/videos", videosController.Index)
+		api.GET("/videos/:video", videosController.Show)
 
-	//this.engine.GET("/users/sign_in", usersController.SignIn)
-	//this.engine.POST("/users/sign_in", usersController.SignIn)
-	//this.engine.GET("/users/sign_up", usersController.SignIn)
-	//this.engine.POST("/users/sign_up", usersController.SignIn)
-	//this.engine.DELETE("/users/sign_out", usersController.SignOut)
-
+		api.GET("/tags", tagsController.Index)
+		api.GET("/tags/:tag", tagsController.Show)
+		api.GET("/tags/:tag/videos", videosController.Index)
+	}
 }
