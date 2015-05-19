@@ -20,8 +20,7 @@ type User struct {
 
 func UserById(id string) User {
 	var resource User
-	d, err := db.Connection()
-	if err == nil {
+	if d, ok := db.Connection(); ok {
 		d.Where("id = ?", id).First(&resource)
 	}
 	return resource

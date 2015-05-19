@@ -32,7 +32,7 @@ func NewConferenceService(opts map[string]interface{}) *ConferenceService {
 
 func (this *ConferenceService) FindConferences() []Conference {
 	var collection []Conference = make([]Conference, 0)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		query := &d
 		limit := 20 // Defaults to 20 items per page
 		if v, ok := this.opts["query"]; ok {
@@ -58,7 +58,7 @@ func (this *ConferenceService) FindConference() (Conference, bool) {
 		resource Conference
 		success  bool
 	)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["conference"]; ok {
 			success = !d.Where("slug = ?", v).First(&resource).RecordNotFound()
 		}

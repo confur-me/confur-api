@@ -39,7 +39,7 @@ func NewVideoService(opts map[string]interface{}) *VideoService {
 func (this *VideoService) FindVideos() []Video {
 	collection := make([]Video, 0)
 	limit := 20
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		query := &d
 		//if v, ok := this.opts["tag"]; ok {
 		//var tag Tag
@@ -76,7 +76,7 @@ func (this *VideoService) FindVideo() (Video, bool) {
 		resource Video
 		success  bool
 	)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["id"]; ok {
 			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
 		}

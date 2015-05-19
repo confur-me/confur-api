@@ -35,7 +35,7 @@ func (this *EventService) FindEvent() (Event, bool) {
 		resource Event
 		success  bool
 	)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["event"]; ok {
 			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
 		}
@@ -45,7 +45,7 @@ func (this *EventService) FindEvent() (Event, bool) {
 
 func (this *EventService) FindEvents() []Event {
 	collection := make([]Event, 0)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["conference"]; ok {
 			d.Where("conference_slug = ?", v).Find(&collection)
 		}

@@ -67,10 +67,10 @@ func Connect() error {
 	return nil
 }
 
-func Connection() (gorm.DB, error) {
+func Connection() (gorm.DB, bool) {
 	var err error
 	if db.connected != true {
 		err = Connect()
 	}
-	return db.connection, err
+	return db.connection, err == nil
 }

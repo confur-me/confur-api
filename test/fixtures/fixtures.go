@@ -1,17 +1,12 @@
 package fixtures
 
 import (
-	"fmt"
 	"github.com/confur-me/confur-api/api/models"
 	"github.com/confur-me/confur-api/db"
 )
 
 func Seed() {
-	d, err := db.Connection()
-	if err != nil {
-		fmt.Println("Db connection error", err)
-	} else {
-
+	if d, ok := db.Connection(); ok {
 		tags := []models.Tag{{
 			Slug:  "go",
 			Title: "Go",

@@ -28,7 +28,7 @@ func (this *TagService) FindTag() (Tag, bool) {
 		resource Tag
 		success  bool
 	)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["tag"]; ok {
 			success = !d.Where("slug = ?", v).First(&resource).RecordNotFound()
 		}
@@ -38,7 +38,7 @@ func (this *TagService) FindTag() (Tag, bool) {
 
 func (this *TagService) FindTags() []Tag {
 	collection := make([]Tag, 0)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		query := &d
 		limit := 20 // Defaults to 20 items per page
 		if v, ok := this.opts["query"]; ok {

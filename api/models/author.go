@@ -24,7 +24,7 @@ func (this *AuthorService) GetAuthor() (Author, bool) {
 		resource Author
 		success  bool
 	)
-	if d, err := db.Connection(); err == nil {
+	if d, ok := db.Connection(); ok {
 		if v, ok := this.opts["id"]; ok {
 			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
 		}

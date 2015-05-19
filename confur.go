@@ -20,7 +20,6 @@ func init() {
 Usage:
   confur -config=/path/to/config.yml start : start server
   confur -config=/path/to/config.yml db:drop : Drop database
-  confur -config=/path/to/config.yml db:create : Create database
   confur -config=/path/to/config.yml db:migrate : Migrate database
   confur -config=/path/to/config.yml fixtures:seed : Seed test data
 `
@@ -46,8 +45,6 @@ func main() {
 	case "start":
 		app := server.Application{}
 		app.Run()
-	case "db:create":
-		migrator.DbCreate()
 	case "db:migrate":
 		migrator.DbMigrate()
 	case "db:drop":
