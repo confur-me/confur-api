@@ -6,22 +6,22 @@ import (
 	"time"
 )
 
-type ConferenceService struct {
-	service
-}
-
 type Conference struct {
 	Slug        string `sql:"type:varchar(64)" gorm:"primary_key" binding:"required"`
 	Title       string `sql:"type:text" binding:"required"`
 	Url         string
-	Type        string `sql:"index" binding:"required"`
-	Description string `sql:"type:text"`
-	Events      []Event
-	Videos      []Video
+	Type        string  `sql:"index" binding:"required"`
+	Description string  `sql:"type:text"`
+	Events      []Event `json:",omitempty"`
+	Videos      []Video `json:",omitempty"`
 	VideosCount int
 	Thumbnail   string
-	IsActive    bool `sql:"index"`
-	UpdatedAt   time.Time
+	IsActive    bool      `sql:"index"`
+	UpdatedAt   time.Time `json:",omitempty"`
+}
+
+type ConferenceService struct {
+	Service
 }
 
 func NewConferenceService(opts map[string]interface{}) *ConferenceService {

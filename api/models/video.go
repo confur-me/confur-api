@@ -15,13 +15,13 @@ type Video struct {
 	Service        string `sql:"index:idx_service_service_id" binding:"required"`
 	ServiceID      string `sql:"index:idx_service_service_id" binding:"required"`
 	ConferenceSlug string `sql:"index" binding:"required"`
-	Tags           []Tag  `gorm:"many2many:videos_tags"`
+	Tags           []Tag  `gorm:"many2many:videos_tags" json:",omitempty"`
 	AuthorID       uint   `sql:"index"`
 	LikesCount     int8
-	Thumbnail      string `sql:"type:text"`
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	DeletedAt      time.Time
+	Thumbnail      string    `sql:"type:text"`
+	CreatedAt      time.Time `json:",omitempty"`
+	UpdatedAt      time.Time `json:",omitempty"`
+	DeletedAt      time.Time `json:",omitempty"`
 }
 
 type VideoService struct {

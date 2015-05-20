@@ -12,7 +12,7 @@ type Author struct {
 	MiddleName string
 	CreatedAt  time.Time
 	Photo      string
-	Events     []Event `gorm:"many2many:events_authors"`
+	Events     []Event `gorm:"many2many:events_authors" json:",omitempty"`
 }
 
 type AuthorService struct {

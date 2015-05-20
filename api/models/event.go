@@ -14,7 +14,7 @@ type Event struct {
 	City           string   `sql:"index:idx_country_state_city_address"`
 	State          string   `sql:"index:idx_country_state_city_address"`
 	Address        string   `sql:"type:text;index:idx_country_state_city_address"`
-	Authors        []Author `gorm:"many2many:events_authors"`
+	Authors        []Author `gorm:"many2many:events_authors" json:",omitempty"`
 	UpdatedAt      time.Time
 	StartedAt      time.Time `sql:"index"`
 	DeletedAt      time.Time
