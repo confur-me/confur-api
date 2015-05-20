@@ -117,7 +117,7 @@ db, err := gorm.Open("postgres", "user=gorm dbname=gorm sslmode=disable")
 
 // You can also use an existing database connection handle
 // dbSql, _ := sql.Open("postgres", "user=gorm dbname=gorm sslmode=disable")
-// db := gorm.Open("postgres", dbSql)
+// db, _ := gorm.Open("postgres", dbSql)
 
 // Get database connection handle [*sql.DB](http://golang.org/pkg/database/sql/#DB)
 db.DB()
@@ -845,6 +845,12 @@ for rows.Next() {
 }
 
 db.Table("users").Select("users.name, emails.email").Joins("left join emails on emails.user_id = users.id").Scan(&results)
+
+// find a user by email address
+db.Joins("inner join emails on emails.user_id = users.id").Where("emails.email = ?", "x@example.org").Find(&user)
+
+// find all email addresses for a user
+db.Joins("left join users on users.id = emails.user_id").Where("users.name = ?", "jinzhu").Find(&emails)
 ```
 
 ## Transactions
@@ -1091,7 +1097,7 @@ type Product struct {
 // 2nd param : destination table(id)
 // 3rd param : ONDELETE
 // 4th param : ONUPDATE
-db.Model(&User{}).AddForeignKey("user_id", "destination_table(id)", "CASCADE", "RESTRICT")
+db.Model(&User{}).AddForeignKey("role_id", "roles", "CASCADE", "RESTRICT")
 
 // Add index
 db.Model(&User{}).AddIndex("idx_user_name", "name")

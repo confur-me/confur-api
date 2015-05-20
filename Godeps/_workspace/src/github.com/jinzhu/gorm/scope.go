@@ -261,6 +261,9 @@ func (scope *Scope) TableName() string {
 
 func (scope *Scope) QuotedTableName() (name string) {
 	if scope.Search != nil && len(scope.Search.tableName) > 0 {
+		if strings.Index(scope.Search.tableName, " ") != -1 {
+			return scope.Search.tableName
+		}
 		return scope.Quote(scope.Search.tableName)
 	} else {
 		return scope.Quote(scope.TableName())
@@ -368,6 +371,8 @@ func (scope *Scope) SelectAttrs() []string {
 		for _, value := range scope.Search.selects {
 			if str, ok := value.(string); ok {
 				attrs = append(attrs, str)
+			} else if strs, ok := value.([]string); ok {
+				attrs = append(attrs, strs...)
 			} else if strs, ok := value.([]interface{}); ok {
 				for _, str := range strs {
 					attrs = append(attrs, fmt.Sprintf("%v", str))

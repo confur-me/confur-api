@@ -18,12 +18,12 @@ func Query(scope *Scope) {
 
 	if orderBy, ok := scope.Get("gorm:order_by_primary_key"); ok {
 		if primaryKey := scope.PrimaryKey(); primaryKey != "" {
-			scope.Search.Order(fmt.Sprintf("%v.%v %v", scope.QuotedTableName(), primaryKey, orderBy))
+			scope.Search.Order(fmt.Sprintf("%v.%v %v", scope.QuotedTableName(), scope.Quote(primaryKey), orderBy))
 		}
 	}
 
 	var dest = scope.IndirectValue()
-	if value, ok := scope.InstanceGet("gorm:query_destination"); ok {
+	if value, ok := scope.Get("gorm:query_destination"); ok {
 		dest = reflect.Indirect(reflect.ValueOf(value))
 	}
 
