@@ -2,8 +2,6 @@ confur-api
 ============
 [![Buid status][travis-badge]][travis-url]
 
-[![Build Status](https://travis-ci.org/confur-me/confur-api.svg?branch=master)](https://travis-ci.org/confur-me/confur-api)
-
 ### Quickstart
 
 ```
