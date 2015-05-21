@@ -17,38 +17,39 @@ type Event struct {
 	Authors        []Author `gorm:"many2many:events_authors" json:",omitempty"`
 	UpdatedAt      time.Time
 	StartedAt      time.Time `sql:"index"`
-	DeletedAt      time.Time
+	DeletedAt      time.Time `json:",omitempty"`
 }
 
-type EventService struct {
-	service
+type eventService struct {
+	Service
 }
 
-func NewEventService(opts map[string]interface{}) *EventService {
-	s := new(EventService)
-	s.opts = opts
+func NewEventService(params map[string]interface{}) *eventService {
+	s := new(eventService)
+	s.params = params
 	return s
 }
 
-func (this *EventService) FindEvent() (Event, bool) {
+func (this *eventService) Event() (*Event, error) {
 	var (
 		resource Event
-		success  bool
+		err      error
 	)
-	if d, ok := db.Connection(); ok {
-		if v, ok := this.opts["event"]; ok {
-			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
+	if conn, ok := db.Connection(); ok {
+		if v, ok := this.params["event"]; ok {
+			err = conn.Where("id = ?", v).First(&resource).Error
 		}
 	}
-	return resource, success
+	return &resource, err
 }
 
-func (this *EventService) FindEvents() []Event {
+func (this *eventService) Events() (*[]Event, error) {
+	var err error
 	collection := make([]Event, 0)
-	if d, ok := db.Connection(); ok {
-		if v, ok := this.opts["conference"]; ok {
-			d.Where("conference_slug = ?", v).Find(&collection)
+	if conn, ok := db.Connection(); ok {
+		if v, ok := this.params["conference"]; ok {
+			err = conn.Where("conference_slug = ?", v).Find(&collection).Error
 		}
 	}
-	return collection
+	return &collection, err
 }

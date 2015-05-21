@@ -10,16 +10,19 @@ type TagsController struct{}
 func (this *TagsController) Show(c *gin.Context) {
 	opts := *params(c, "tag")
 	service := models.NewTagService(opts)
-	if tag, ok := service.FindTag(); ok {
-		c.JSON(200, tag)
+	if tag, err := service.Tag(); err == nil {
+		c.JSON(200, &tag)
 	} else {
-		c.JSON(404, "Tag not found")
+		c.JSON(404, err)
 	}
 }
 
 func (this *TagsController) Index(c *gin.Context) {
 	opts := *params(c)
 	service := models.NewTagService(opts)
-	tags := service.FindTags()
-	c.JSON(200, tags)
+	if tags, err := service.Tags(); err == nil {
+		c.JSON(200, &tags)
+	} else {
+		c.JSON(400, err)
+	}
 }

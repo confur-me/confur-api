@@ -1,5 +1,6 @@
 package models
 
-type service struct {
-	opts map[string]interface{}
+type Service struct {
+	params   map[string]interface{}
+	resource interface{}
 }

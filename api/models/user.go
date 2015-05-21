@@ -6,22 +6,29 @@ import (
 )
 
 type User struct {
-	ID                   uint   `gorm:"primary_key"`
-	Email                string `sql:"index" binding:"required"`
-	Name                 string
-	Password             string `json:"-"`
-	PasswordConfirmation string `sql:"-" json:"-"`
-	ConfirmationToken    string `sql:"type:text" json:"-"`
-	SignInToken          string `sql:"type:text" json:"-"`
-	ResetPasswordToken   string `sql:"type:text" json:"-"`
-	CreatedAt            time.Time
-	ConfirmedAt          time.Time
+	ID        uint   `gorm:"primary_key"`
+	Email     string `sql:"index" binding:"required"`
+	Name      string
+	CreatedAt time.Time
 }
 
-func UserById(id string) User {
-	var resource User
-	if d, ok := db.Connection(); ok {
-		d.Where("id = ?", id).First(&resource)
+type userService struct {
+	Service
+}
+
+func NewUserService(params map[string]interface{}) *userService {
+	s := new(userService)
+	s.params = params
+	return s
+}
+
+func (this *userService) User(id string) (*User, error) {
+	var (
+		resource User
+		err      error
+	)
+	if conn, ok := db.Connection(); ok {
+		err = conn.Where("id = ?", id).First(&resource).Error
 	}
-	return resource
+	return &resource, err
 }

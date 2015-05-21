@@ -10,16 +10,19 @@ type VideosController struct{}
 func (this *VideosController) Show(c *gin.Context) {
 	opts := *params(c, "video")
 	service := models.NewVideoService(opts)
-	if video, ok := service.FindVideo(); ok {
+	if video, err := service.Video(); err == nil {
 		c.JSON(200, video)
 	} else {
-		c.JSON(404, "Video not found")
+		c.JSON(404, err)
 	}
 }
 
 func (this *VideosController) Index(c *gin.Context) {
 	opts := *params(c, "conference", "tag", "event")
 	service := models.NewVideoService(opts)
-	conferences := service.FindVideos()
-	c.JSON(200, conferences)
+	if videos, err := service.Videos(); err == nil {
+		c.JSON(200, videos)
+	} else {
+		c.JSON(400, err)
+	}
 }

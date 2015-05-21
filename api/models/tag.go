@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"github.com/confur-me/confur-api/db"
+	"time"
 )
 
 type Tag struct {
@@ -11,50 +12,53 @@ type Tag struct {
 	Title       string  `binding:"required"`
 	Videos      []Video `gorm:"many2many:videos_tags" json:",omitempty"`
 	VideosCount int
+	DeletedAt   time.Time `json:",omitempty"`
 }
 
-type TagService struct {
-	service
+type tagService struct {
+	Service
 }
 
-func NewTagService(opts map[string]interface{}) *TagService {
-	s := new(TagService)
-	s.opts = opts
+func NewTagService(params map[string]interface{}) *tagService {
+	s := new(tagService)
+	s.params = params
 	return s
 }
 
-func (this *TagService) FindTag() (Tag, bool) {
+func (this *tagService) Tag() (*Tag, error) {
 	var (
 		resource Tag
-		success  bool
+		err      error
 	)
-	if d, ok := db.Connection(); ok {
-		if v, ok := this.opts["tag"]; ok {
-			success = !d.Where("slug = ?", v).First(&resource).RecordNotFound()
+	if conn, ok := db.Connection(); ok {
+		if v, ok := this.params["tag"]; ok {
+			err = conn.Where("slug = ?", v).First(&resource).Error
 		}
 	}
-	return resource, success
+	return &resource, err
 }
 
-func (this *TagService) FindTags() []Tag {
+func (this *tagService) Tags() (*[]Tag, error) {
+	var err error
 	collection := make([]Tag, 0)
-	if d, ok := db.Connection(); ok {
-		query := &d
+	if conn, ok := db.Connection(); ok {
+		query := &conn
 		limit := 20 // Defaults to 20 items per page
-		if v, ok := this.opts["query"]; ok {
+		page := 0
+		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility
 			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
 		}
-		if v, ok := this.opts["limit"]; ok {
+		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {
 				limit = v.(int)
 			}
+			if v, ok := this.params["page"]; ok {
+				page = v.(int)
+			}
+			query = query.Scopes(Paginate(limit, page))
 		}
-		if v, ok := this.opts["page"]; ok {
-			offset := (v.(int) - 1) * limit
-			query = query.Offset(offset)
-		}
-		query = query.Limit(limit).Find(&collection)
+		err = query.Limit(limit).Find(&collection).Error
 	}
-	return collection
+	return &collection, err
 }

@@ -16,52 +16,57 @@ type Conference struct {
 	Videos      []Video `json:",omitempty"`
 	VideosCount int
 	Thumbnail   string
-	IsActive    bool      `sql:"index"`
-	UpdatedAt   time.Time `json:",omitempty"`
+	IsActive    bool `sql:"index"`
+	UpdatedAt   time.Time
 }
 
-type ConferenceService struct {
+type conferenceService struct {
 	Service
+	Resource *Conference
 }
 
-func NewConferenceService(opts map[string]interface{}) *ConferenceService {
-	s := new(ConferenceService)
-	s.opts = opts
+func NewConferenceService(params map[string]interface{}) *conferenceService {
+	s := new(conferenceService)
+	s.params = params
 	return s
 }
 
-func (this *ConferenceService) FindConferences() []Conference {
-	var collection []Conference = make([]Conference, 0)
-	if d, ok := db.Connection(); ok {
-		query := &d
-		limit := 20 // Defaults to 20 items per page
-		if v, ok := this.opts["query"]; ok {
-			// FIXME: CHECK injection possibility
-			query = query.Where("title ILIKE ?", "%"+fmt.Sprintf("%v", v)+"%")
+func (this *conferenceService) Conference() (*Conference, error) {
+	var (
+		resource Conference
+		err      error
+	)
+	if conn, ok := db.Connection(); ok {
+		if v, ok := this.params["conference"]; ok {
+			err = conn.Where("slug = ?", v).First(&resource).Error
 		}
-		if v, ok := this.opts["limit"]; ok {
+	}
+	return &resource, err
+}
+
+func (this *conferenceService) Conferences() (*[]Conference, error) {
+	var (
+		collection []Conference = make([]Conference, 0)
+		err        error
+	)
+	if conn, ok := db.Connection(); ok {
+		query := &conn
+		limit := 20 // Defaults to 20 items per page
+		page := 0
+		if v, ok := this.params["query"]; ok {
+			// FIXME: CHECK injection possibility
+			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
+		}
+		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {
 				limit = v.(int)
 			}
+			if v, ok := this.params["page"]; ok {
+				page = v.(int)
+			}
+			query = query.Scopes(Paginate(limit, page))
 		}
-		if v, ok := this.opts["page"]; ok {
-			offset := (v.(int) - 1) * limit
-			query = query.Offset(offset)
-		}
-		query = query.Limit(limit).Find(&collection)
+		err = query.Find(&collection).Error
 	}
-	return collection
-}
-
-func (this *ConferenceService) FindConference() (Conference, bool) {
-	var (
-		resource Conference
-		success  bool
-	)
-	if d, ok := db.Connection(); ok {
-		if v, ok := this.opts["conference"]; ok {
-			success = !d.Where("slug = ?", v).First(&resource).RecordNotFound()
-		}
-	}
-	return resource, success
+	return &collection, err
 }

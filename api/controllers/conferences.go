@@ -8,18 +8,21 @@ import (
 type ConferencesController struct{}
 
 func (this *ConferencesController) Show(c *gin.Context) {
-	opts := *params(c, "conference")
-	service := models.NewConferenceService(opts)
-	if conference, ok := service.FindConference(); ok {
-		c.JSON(200, conference)
+	params := *params(c, "conference")
+	service := models.NewConferenceService(params)
+	if conference, err := service.Conference(); err == nil {
+		c.JSON(200, &conference)
 	} else {
-		c.JSON(404, "Conference not found")
+		c.JSON(404, err)
 	}
 }
 
 func (this *ConferencesController) Index(c *gin.Context) {
-	opts := *params(c)
-	service := models.NewConferenceService(opts)
-	conferences := service.FindConferences()
-	c.JSON(200, conferences)
+	params := *params(c)
+	service := models.NewConferenceService(params)
+	if conferences, err := service.Conferences(); err == nil {
+		c.JSON(200, &conferences)
+	} else {
+		c.JSON(400, err)
+	}
 }

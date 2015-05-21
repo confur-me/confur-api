@@ -16,18 +16,18 @@ type Author struct {
 }
 
 type AuthorService struct {
-	service
+	Service
 }
 
-func (this *AuthorService) GetAuthor() (Author, bool) {
+func (this *AuthorService) Author() (*Author, error) {
 	var (
 		resource Author
-		success  bool
+		err      error
 	)
-	if d, ok := db.Connection(); ok {
-		if v, ok := this.opts["id"]; ok {
-			success = !d.Where("id = ?", v).First(&resource).RecordNotFound()
+	if conn, ok := db.Connection(); ok {
+		if v, ok := this.params["id"]; ok {
+			err = conn.Where("id = ?", v).First(&resource).Error
 		}
 	}
-	return resource, success
+	return &resource, err
 }
