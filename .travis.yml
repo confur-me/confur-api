@@ -5,4 +5,11 @@ go:
   - 1.4
   - tip
 
+addons:
+  postgresql: "9.3"
+
+before_script:
+  - psql -c 'CREATE DATABASE travis_ci_test;' -U postgres
+
 install: make
+script: ./confur -c confur.travis.yml db:migrate
