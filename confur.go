@@ -20,6 +20,7 @@ func init() {
 Usage:
   confur -config=/path/to/config.yml start : start server
   confur -config=/path/to/config.yml db:drop : Drop database
+  confur -config=/path/to/config.yml db:create : Create database
   confur -config=/path/to/config.yml db:migrate : Migrate database
   confur -config=/path/to/config.yml fixtures:seed : Seed test data
 `
@@ -49,6 +50,8 @@ func main() {
 		migrator.DbMigrate()
 	case "db:drop":
 		migrator.DbDrop()
+	case "db:create":
+		migrator.DbCreate()
 	case "fixtures:seed":
 		//fixtures.Seed()
 	default:

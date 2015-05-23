@@ -23,6 +23,6 @@ func (this *TagsController) Index(c *gin.Context) {
 	if tags, err := service.Tags(); err == nil {
 		c.JSON(200, &tags)
 	} else {
-		c.JSON(400, err)
+		c.JSON(500, err)
 	}
 }

@@ -15,6 +15,7 @@ type Event struct {
 	State          string   `sql:"index:idx_country_state_city_address"`
 	Address        string   `sql:"type:text;index:idx_country_state_city_address"`
 	Authors        []Author `gorm:"many2many:events_authors" json:",omitempty"`
+	VideosCount    uint     `sql:"not null;default:0"`
 	UpdatedAt      time.Time
 	StartedAt      time.Time `sql:"index"`
 	DeletedAt      time.Time `json:",omitempty"`

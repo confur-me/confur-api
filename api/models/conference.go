@@ -13,8 +13,9 @@ type Conference struct {
 	Type        string  `sql:"index" binding:"required"`
 	Description string  `sql:"type:text"`
 	Events      []Event `json:",omitempty"`
+	EventsCount uint    `sql:"not null;default:0"`
 	Videos      []Video `json:",omitempty"`
-	VideosCount int
+	VideosCount uint    `sql:"not null;default:0"`
 	Thumbnail   string
 	IsActive    bool `sql:"index"`
 	UpdatedAt   time.Time

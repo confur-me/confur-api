@@ -63,7 +63,7 @@ func Connect() error {
 	db.connected = true
 	log.Info("Connected to database")
 	db.connection.LogMode(true)
-	db.connection.SetLogger(Logger{})
+	//db.connection.SetLogger(Logger{})
 	return nil
 }
 

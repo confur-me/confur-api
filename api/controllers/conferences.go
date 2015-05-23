@@ -23,6 +23,6 @@ func (this *ConferencesController) Index(c *gin.Context) {
 	if conferences, err := service.Conferences(); err == nil {
 		c.JSON(200, &conferences)
 	} else {
-		c.JSON(400, err)
+		c.JSON(500, err)
 	}
 }

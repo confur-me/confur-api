@@ -17,6 +17,17 @@ func DbDrop() {
 	}
 }
 
+func DbCreate() {
+	if d, ok := db.Connection(); ok {
+		d.CreateTable(&models.Conference{})
+		d.CreateTable(&models.Event{})
+		d.CreateTable(&models.Video{})
+		d.CreateTable(&models.Tag{})
+		d.CreateTable(&models.User{})
+		d.CreateTable(&models.Author{})
+	}
+}
+
 func DbMigrate() {
 	if d, ok := db.Connection(); ok {
 		d.AutoMigrate(

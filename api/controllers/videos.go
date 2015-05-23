@@ -23,6 +23,6 @@ func (this *VideosController) Index(c *gin.Context) {
 	if videos, err := service.Videos(); err == nil {
 		c.JSON(200, videos)
 	} else {
-		c.JSON(400, err)
+		c.JSON(500, err)
 	}
 }
