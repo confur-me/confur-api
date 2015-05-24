@@ -7,12 +7,12 @@ import (
 )
 
 type Tag struct {
-	ID          uint    `gorm:"primary_key"`
-	Slug        string  `sql:"index" binding:"required"`
-	Title       string  `binding:"required"`
-	Videos      []Video `gorm:"many2many:videos_tags" json:",omitempty"`
-	VideosCount int
-	DeletedAt   time.Time `json:",omitempty"`
+	ID          uint      `gorm:"primary_key" json:"id"`
+	Slug        string    `sql:"index" binding:"required" json:"slug"`
+	Title       string    `binding:"required" json:"title"`
+	Videos      []Video   `gorm:"many2many:videos_tags" json:"videos,omitempty"`
+	VideosCount int       `json:"videos_count"`
+	DeletedAt   time.Time `json:"deleted_at,omitempty"`
 }
 
 type tagService struct {

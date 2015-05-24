@@ -7,21 +7,21 @@ import (
 )
 
 type Video struct {
-	ID             uint   `gorm:"primary_key"`
-	Title          string `sql:"type:text" binding:"required"`
-	Url            string
-	Length         int32
-	Description    string `sql:"type:text"`
-	Service        string `sql:"index:idx_service_service_id" binding:"required"`
-	ServiceID      string `sql:"index:idx_service_service_id" binding:"required"`
-	ConferenceSlug string `sql:"index" binding:"required"`
-	Tags           []Tag  `gorm:"many2many:videos_tags" json:",omitempty"`
-	AuthorID       uint   `sql:"index"`
-	LikesCount     int8
-	Thumbnail      string `sql:"type:text"`
-	CreatedAt      time.Time
-	UpdatedAt      time.Time
-	DeletedAt      time.Time `json:",omitempty"`
+	ID             uint      `gorm:"primary_key" json:"id"`
+	Title          string    `sql:"type:text" binding:"required" json:"title"`
+	Url            string    `json:"url"`
+	Length         int32     `json:"length"`
+	Description    string    `sql:"type:text" json:"description"`
+	Service        string    `sql:"index:idx_service_service_id" binding:"required" json:"service"`
+	ServiceID      string    `sql:"index:idx_service_service_id" binding:"required" json:"service_id"`
+	ConferenceSlug string    `sql:"index" binding:"required" json:"conference_slug"`
+	Tags           []Tag     `gorm:"many2many:videos_tags" json:"tags,omitempty"`
+	AuthorID       uint      `sql:"index" json:"author_id"`
+	LikesCount     int8      `json:"likes_count"`
+	Thumbnail      string    `sql:"type:text" json:"thumbnail"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	DeletedAt      time.Time `json:"deleted_at,omitempty"`
 }
 
 type videoService struct {

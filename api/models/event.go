@@ -6,19 +6,19 @@ import (
 )
 
 type Event struct {
-	ID             uint     `gorm:"primary_key"`
-	ConferenceSlug string   `sql:"index" binding:"required"`
-	Title          string   `sql:"type:text" binding:"required"`
-	Description    string   `sql:"type:text"`
-	Country        string   `sql:"index:idx_country_state_city_address"`
-	City           string   `sql:"index:idx_country_state_city_address"`
-	State          string   `sql:"index:idx_country_state_city_address"`
-	Address        string   `sql:"type:text;index:idx_country_state_city_address"`
-	Authors        []Author `gorm:"many2many:events_authors" json:",omitempty"`
-	VideosCount    uint     `sql:"not null;default:0"`
-	UpdatedAt      time.Time
-	StartedAt      time.Time `sql:"index"`
-	DeletedAt      time.Time `json:",omitempty"`
+	ID             uint      `gorm:"primary_key" json:"id"`
+	ConferenceSlug string    `sql:"index" binding:"required" json:"conference_slug"`
+	Title          string    `sql:"type:text" binding:"required" json:"title"`
+	Description    string    `sql:"type:text" json:"description"`
+	Country        string    `sql:"index:idx_country_state_city_address" json:"country"`
+	City           string    `sql:"index:idx_country_state_city_address" json:"city"`
+	State          string    `sql:"index:idx_country_state_city_address" json:"state"`
+	Address        string    `sql:"type:text;index:idx_country_state_city_address" json:"address"`
+	Authors        []Author  `gorm:"many2many:events_authors" json:"authors,omitempty"`
+	VideosCount    uint      `sql:"not null;default:0" json:"videos_count"`
+	UpdatedAt      time.Time `json:"updated_at"`
+	StartedAt      time.Time `sql:"index" json:"started_at"`
+	DeletedAt      time.Time `json:"deleted_at,omitempty"`
 }
 
 type eventService struct {
