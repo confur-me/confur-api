@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"github.com/confur-me/confur-api/db"
 	"time"
 )
@@ -48,9 +49,26 @@ func (this *eventService) Events() (*[]Event, error) {
 	var err error
 	collection := make([]Event, 0)
 	if conn, ok := db.Connection(); ok {
+		query := &conn
+		limit := 20 // Defaults to 20 items per page
+		page := 0
 		if v, ok := this.params["conference"]; ok {
-			err = conn.Where("conference_slug = ?", v).Find(&collection).Error
+			query = query.Where("conference_slug = ?", v)
 		}
+		if v, ok := this.params["query"]; ok {
+			// FIXME: CHECK injection possibility
+			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
+		}
+		if v, ok := this.params["limit"]; ok {
+			if v.(int) <= 50 {
+				limit = v.(int)
+			}
+			if v, ok := this.params["page"]; ok {
+				page = v.(int)
+			}
+			query = query.Scopes(Paginate(limit, page))
+		}
+		err = query.Find(&collection).Error
 	}
 	return &collection, err
 }
