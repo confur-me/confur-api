@@ -16,7 +16,8 @@ type Video struct {
 	ServiceID      string    `sql:"index:idx_service_service_id" binding:"required" json:"service_id"`
 	ConferenceSlug string    `sql:"index" binding:"required" json:"conference_slug"`
 	Tags           []Tag     `gorm:"many2many:videos_tags" json:"tags,omitempty"`
-	AuthorID       uint      `sql:"index" json:"author_id"`
+	Speakers       []Speaker `gorm:"many2many:videos_speakers" json:"speakers,omitempty"`
+	EventID        uint      `sql:"index" json:"event_id"`
 	LikesCount     int8      `json:"likes_count"`
 	Thumbnail      string    `sql:"type:text" json:"thumbnail"`
 	CreatedAt      time.Time `json:"created_at"`
@@ -53,6 +54,9 @@ func (this *videoService) Videos() (*[]Video, error) {
 		//}
 		if v, ok := this.params["conference"]; ok {
 			query = query.Where("conference_slug = ?", v)
+		}
+		if v, ok := this.params["event"]; ok {
+			query = query.Where("event_id = ?", v)
 		}
 		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility

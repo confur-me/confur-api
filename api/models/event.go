@@ -15,7 +15,7 @@ type Event struct {
 	City           string    `sql:"index:idx_country_state_city_address" json:"city"`
 	State          string    `sql:"index:idx_country_state_city_address" json:"state"`
 	Address        string    `sql:"type:text;index:idx_country_state_city_address" json:"address"`
-	Authors        []Author  `gorm:"many2many:events_authors" json:"authors,omitempty"`
+	Speakers       []Speaker `gorm:"many2many:events_speakers" json:"speakers,omitempty"`
 	VideosCount    uint      `sql:"not null;default:0" json:"videos_count"`
 	UpdatedAt      time.Time `json:"updated_at"`
 	StartedAt      time.Time `sql:"index" json:"started_at"`

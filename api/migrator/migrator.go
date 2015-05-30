@@ -13,7 +13,7 @@ func DbDrop() {
 		d.DropTable(&models.Video{})
 		d.DropTable(&models.Tag{})
 		d.DropTable(&models.User{})
-		d.DropTable(&models.Author{})
+		d.DropTable(&models.Speaker{})
 	}
 }
 
@@ -24,7 +24,7 @@ func DbCreate() {
 		d.CreateTable(&models.Video{})
 		d.CreateTable(&models.Tag{})
 		d.CreateTable(&models.User{})
-		d.CreateTable(&models.Author{})
+		d.CreateTable(&models.Speaker{})
 	}
 }
 
@@ -36,7 +36,7 @@ func DbMigrate() {
 			&models.Video{},
 			&models.Tag{},
 			&models.User{},
-			&models.Author{},
+			&models.Speaker{},
 		)
 	}
 }
