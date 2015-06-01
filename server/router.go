@@ -19,6 +19,7 @@ func (this *Router) Initialize() {
 		tagsController := &controllers.TagsController{}
 
 		api.GET("/", apiController.Index)
+		api.GET("/status", apiController.Status)
 
 		api.GET("/conferences", conferencesController.Index)
 		api.GET("/conferences/:conference", conferencesController.Show)
