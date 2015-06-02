@@ -63,12 +63,11 @@ func (this *eventService) Events() (*[]Event, error) {
 			if v.(int) <= 50 {
 				limit = v.(int)
 			}
-			if v, ok := this.params["page"]; ok {
-				page = v.(int)
-			}
-			query = query.Scopes(Paginate(limit, page))
 		}
-		err = query.Find(&collection).Error
+		if v, ok := this.params["page"]; ok {
+			page = v.(int)
+		}
+		err = query.Scopes(Paginate(limit, page)).Find(&collection).Error
 	}
 	return &collection, err
 }

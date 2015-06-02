@@ -53,12 +53,11 @@ func (this *tagService) Tags() (*[]Tag, error) {
 			if v.(int) <= 50 {
 				limit = v.(int)
 			}
-			if v, ok := this.params["page"]; ok {
-				page = v.(int)
-			}
-			query = query.Scopes(Paginate(limit, page))
 		}
-		err = query.Limit(limit).Find(&collection).Error
+		if v, ok := this.params["page"]; ok {
+			page = v.(int)
+		}
+		err = query.Scopes(Paginate(limit, page)).Limit(limit).Find(&collection).Error
 	}
 	return &collection, err
 }
