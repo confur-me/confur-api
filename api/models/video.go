@@ -41,7 +41,7 @@ func (this *videoService) Videos() (*[]Video, error) {
 	var err error
 	collection := make([]Video, 0)
 	limit := 20
-	page := 0
+	page := 1
 	if conn, ok := db.Connection(); ok {
 		query := &conn
 		//if v, ok := this.params["tag"]; ok {
@@ -61,7 +61,7 @@ func (this *videoService) Videos() (*[]Video, error) {
 		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility
 			query = query.
-				Where("title ILIKE ? OR description ILIKE ?", fmt.Sprintf("%%%v%%", v), fmt.Sprintf("%%%v%%", v))
+				Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
 		}
 		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {
@@ -80,10 +80,17 @@ func (this *videoService) Video() (*Video, error) {
 	var (
 		resource Video
 		err      error
+		tags     []Tag
+		speakers []Speaker
 	)
 	if conn, ok := db.Connection(); ok {
-		if v, ok := this.params["id"]; ok {
+		if v, ok := this.params["video"]; ok {
 			err = conn.Where("id = ?", v).First(&resource).Error
+			if err == nil {
+				conn.Model(&resource).Related(&tags, "Tags").Related(&speakers, "Speakers")
+				resource.Tags = tags
+				resource.Speakers = speakers
+			}
 		}
 	}
 	return &resource, err

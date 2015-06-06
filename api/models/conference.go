@@ -53,7 +53,7 @@ func (this *conferenceService) Conferences() (*[]Conference, error) {
 	if conn, ok := db.Connection(); ok {
 		query := &conn
 		limit := 20 // Defaults to 20 items per page
-		page := 0
+		page := 1
 		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility
 			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))

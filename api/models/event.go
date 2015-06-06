@@ -51,7 +51,7 @@ func (this *eventService) Events() (*[]Event, error) {
 	if conn, ok := db.Connection(); ok {
 		query := &conn
 		limit := 20 // Defaults to 20 items per page
-		page := 0
+		page := 1
 		if v, ok := this.params["conference"]; ok {
 			query = query.Where("conference_slug = ?", v)
 		}

@@ -44,10 +44,10 @@ func (this *tagService) Tags() (*[]Tag, error) {
 	if conn, ok := db.Connection(); ok {
 		query := &conn
 		limit := 20 // Defaults to 20 items per page
-		page := 0
+		page := 1
 		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility
-			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
+			query = query.Where("slug ILIKE ?", fmt.Sprintf("%%%v%%", v))
 		}
 		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {
