@@ -17,6 +17,7 @@ func (this *Router) Initialize() {
 		conferencesController := &controllers.ConferencesController{}
 		eventsController := &controllers.EventsController{}
 		tagsController := &controllers.TagsController{}
+		searchController := &controllers.SearchController{}
 
 		api.GET("/", apiController.Index)
 		api.GET("/status", apiController.Status)
@@ -36,5 +37,7 @@ func (this *Router) Initialize() {
 		api.GET("/tags", tagsController.Index)
 		api.GET("/tags/:tag", tagsController.Show)
 		api.GET("/tags/:tag/videos", videosController.Index)
+
+		api.GET("/search", searchController.Index)
 	}
 }
