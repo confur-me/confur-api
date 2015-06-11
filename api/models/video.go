@@ -7,22 +7,22 @@ import (
 )
 
 type Video struct {
-	ID             uint      `gorm:"primary_key" json:"id"`
-	Title          string    `sql:"type:text" binding:"required" json:"title"`
-	Url            string    `json:"url"`
-	Length         int32     `json:"length"`
-	Description    string    `sql:"type:text" json:"description"`
-	Service        string    `sql:"index:idx_service_service_id" binding:"required" json:"service"`
-	ServiceID      string    `sql:"index:idx_service_service_id" binding:"required" json:"service_id"`
-	ConferenceSlug string    `sql:"index" binding:"required" json:"conference_slug"`
-	Tags           []Tag     `gorm:"many2many:videos_tags" json:"tags,omitempty"`
-	Speakers       []Speaker `gorm:"many2many:videos_speakers" json:"speakers,omitempty"`
-	EventID        uint      `sql:"index" json:"event_id"`
-	LikesCount     int8      `json:"likes_count"`
-	Thumbnail      string    `sql:"type:text" json:"thumbnail"`
-	CreatedAt      time.Time `json:"created_at"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	DeletedAt      time.Time `json:"deleted_at,omitempty"`
+	ID             uint       `gorm:"primary_key" json:"id"`
+	Title          *string    `sql:"not null,type:text" binding:"required" json:"title"`
+	Url            string     `json:"url"`
+	Length         uint       `json:"length"`
+	Description    string     `sql:"type:text" json:"description"`
+	ConferenceSlug *string    `sql:"not null,index" binding:"required" json:"conference_slug"`
+	Scope          *string    `sql:"not null,index" json:"scope"`
+	TagResources   []Tag      `gorm:"many2many:videos_tags" json:"-"`
+	Tags           []string   `sql:"-" json:"tags,omitempty"`
+	Speakers       []Speaker  `gorm:"many2many:videos_speakers" json:"speakers,omitempty"`
+	EventID        *uint      `sql:"index" json:"event_id"`
+	LikesCount     uint       `json:"likes_count"`
+	DislikesCount  uint       `json:"likes_count"`
+	Rating         float64    `json:"rating"`
+	Thumbnail      string     `sql:"type:text" json:"thumbnail"`
+	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
 }
 
 type videoService struct {
@@ -78,17 +78,21 @@ func (this *videoService) Videos() (*[]Video, error) {
 
 func (this *videoService) Video() (*Video, error) {
 	var (
-		resource Video
-		err      error
-		tags     []Tag
-		speakers []Speaker
+		resource     Video
+		err          error
+		tagResources []Tag
+		speakers     []Speaker
+		tags         []string
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["video"]; ok {
 			err = conn.Where("id = ?", v).First(&resource).Error
 			if err == nil {
-				conn.Model(&resource).Related(&tags, "Tags").Related(&speakers, "Speakers")
-				resource.Tags = tags
+				conn.Model(&resource).Related(&tags, "TagResources").Related(&speakers, "Speakers")
+				for _, v := range tagResources {
+					tags = append(tags, v.Slug)
+					resource.Tags = tags
+				}
 				resource.Speakers = speakers
 			}
 		}

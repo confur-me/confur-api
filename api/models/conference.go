@@ -7,18 +7,20 @@ import (
 )
 
 type Conference struct {
-	Slug        string    `sql:"type:varchar(64)" gorm:"primary_key" binding:"required" json:"slug"`
-	Title       string    `sql:"type:text" binding:"required" json:"title"`
-	Url         string    `json:"url"`
-	Type        string    `sql:"index" binding:"required" json:"type"`
-	Description string    `sql:"type:text" json:"description"`
-	Events      []Event   `json:"events,omitempty"`
-	EventsCount uint      `sql:"not null;default:0" json:"events_count"`
-	Videos      []Video   `json:"videos,omitempty"`
-	VideosCount uint      `sql:"not null;default:0" json:"videos_count"`
-	Thumbnail   string    `json:"is_active"`
-	IsActive    bool      `sql:"index" json:"is_active"`
-	UpdatedAt   time.Time `json:"updated_at"`
+	Slug        string     `sql:"type:varchar(64)" gorm:"primary_key" binding:"required" json:"slug"`
+	Title       string     `sql:"type:text" binding:"required" json:"title"`
+	Url         string     `json:"url"`
+	Type        *string    `sql:"not null;index" binding:"required" json:"type"`
+	Scope       *string    `sql:"not null;index" json:"scope"`
+	Description string     `sql:"type:text" json:"description"`
+	Events      []Event    `json:"events,omitempty"`
+	EventsCount uint       `sql:"not null;default:0" json:"events_count"`
+	Videos      []Video    `json:"videos,omitempty"`
+	VideosCount uint       `sql:"not null;default:0" json:"videos_count"`
+	Thumbnail   string     `json:"is_active"`
+	IsActive    bool       `sql:"index" json:"is_active"`
+	UpdatedAt   time.Time  `json:"updated_at"`
+	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
 
 type conferenceService struct {
