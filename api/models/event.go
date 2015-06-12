@@ -7,19 +7,20 @@ import (
 )
 
 type Event struct {
-	ID             uint      `gorm:"primary_key" json:"id"`
-	ConferenceSlug string    `sql:"index" binding:"required" json:"conference_slug"`
-	Title          string    `sql:"type:text" binding:"required" json:"title"`
-	Description    string    `sql:"type:text" json:"description"`
-	Country        string    `sql:"index:idx_country_state_city_address" json:"country"`
-	City           string    `sql:"index:idx_country_state_city_address" json:"city"`
-	State          string    `sql:"index:idx_country_state_city_address" json:"state"`
-	Address        string    `sql:"type:text;index:idx_country_state_city_address" json:"address"`
-	Speakers       []Speaker `gorm:"many2many:events_speakers" json:"speakers,omitempty"`
-	VideosCount    uint      `sql:"not null;default:0" json:"videos_count"`
-	UpdatedAt      time.Time `json:"updated_at"`
-	StartedAt      time.Time `sql:"index" json:"started_at"`
-	DeletedAt      time.Time `json:"deleted_at,omitempty"`
+	ID             uint       `gorm:"primary_key" json:"id"`
+	ConferenceSlug *string    `sql:"not null;index" binding:"required" json:"conference_slug"`
+	Scope          *string    `sql:"not null;index" json:"scope" binding:"required"`
+	Title          string     `sql:"type:text" binding:"required" json:"title"`
+	Description    string     `sql:"type:text" json:"description"`
+	Country        string     `sql:"index:idx_country_state_city_address" json:"country"`
+	City           string     `sql:"index:idx_country_state_city_address" json:"city"`
+	State          string     `sql:"index:idx_country_state_city_address" json:"state"`
+	Address        string     `sql:"type:text;index:idx_country_state_city_address" json:"address"`
+	Speakers       []Speaker  `gorm:"many2many:events_speakers" json:"speakers,omitempty"`
+	VideosCount    uint       `sql:"not null;default:0" json:"videos_count"`
+	StartsAt       *time.Time `sql:"index" json:"started_at"`
+	UpdatedAt      time.Time  `json:"updated_at"`
+	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
 }
 
 type eventService struct {

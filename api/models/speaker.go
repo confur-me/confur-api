@@ -6,14 +6,15 @@ import (
 )
 
 type Speaker struct {
-	ID         uint      `gorm:"primary_key" json:"id"`
-	FirstName  string    `json:"first_name"`
-	LastName   string    `json:"last_name"`
-	MiddleName string    `json:"middle_name"`
-	CreatedAt  time.Time `json:"created_at"`
-	Photo      string    `json:"photo"`
-	Events     []Event   `gorm:"many2many:events_speakers" json:"events,omitempty"`
-	Videos     []Video   `gorm:"many2many:videos_speakers" json:"videos,omitempty"`
+	ID         uint       `gorm:"primary_key" json:"id"`
+	FirstName  *string    `json:"first_name"`
+	MiddleName *string    `json:"middle_name"`
+	LastName   *string    `json:"last_name"`
+	NickName   *string    `json:"nick_name"`
+	Photo      string     `json:"photo"`
+	Events     []Event    `gorm:"many2many:events_speakers" json:"events,omitempty"`
+	Videos     []Video    `gorm:"many2many:videos_speakers" json:"videos,omitempty"`
+	DeletedAt  *time.Time `json:"deleted_at,omitempty"`
 }
 
 type SpeakerService struct {
