@@ -10,13 +10,13 @@ type Video struct {
 	ID             uint       `gorm:"primary_key" json:"id"`
 	Title          *string    `sql:"not null,type:text" binding:"required" json:"title"`
 	Url            string     `json:"url"`
-	Length         uint       `json:"length"`
+	Length         *uint      `json:"length,omitempty"`
 	Description    string     `sql:"type:text" json:"description"`
 	ConferenceSlug *string    `sql:"not null,index" binding:"required" json:"conference_slug"`
 	Scope          *string    `sql:"not null,index" json:"scope"`
-	TagResources   []Tag      `gorm:"many2many:videos_tags" json:"-"`
-	Tags           []string   `sql:"-" json:"tags,omitempty"`
-	Speakers       []Speaker  `gorm:"many2many:videos_speakers" json:"speakers,omitempty"`
+	TagResources   []Tag      `gorm:"many2many:videos_tags;associationforeignkey:tag_slug" json:"-"`
+	Tags           []string   `sql:"-" json:"tags"`
+	Speakers       []Speaker  `gorm:"many2many:videos_speakers" json:"speakers"`
 	EventID        *uint      `sql:"index" json:"event_id"`
 	LikesCount     uint       `json:"likes_count"`
 	DislikesCount  uint       `json:"likes_count"`
@@ -78,21 +78,22 @@ func (this *videoService) Videos() (*[]Video, error) {
 
 func (this *videoService) Video() (*Video, error) {
 	var (
-		resource     Video
-		err          error
-		tagResources []Tag
-		speakers     []Speaker
-		tags         []string
+		resource Video
+		err      error
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["video"]; ok {
 			err = conn.Where("id = ?", v).First(&resource).Error
 			if err == nil {
-				conn.Model(&resource).Related(&tags, "TagResources").Related(&speakers, "Speakers")
+				var tagResources []Tag
+				speakers := make([]Speaker, 0)
+				tags := make([]string, 0)
+
+				conn.Model(&resource).Related(&tagResources, "TagResources").Related(&speakers, "Speakers")
 				for _, v := range tagResources {
 					tags = append(tags, v.Slug)
-					resource.Tags = tags
 				}
+				resource.Tags = tags
 				resource.Speakers = speakers
 			}
 		}

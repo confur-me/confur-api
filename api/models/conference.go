@@ -17,8 +17,8 @@ type Conference struct {
 	EventsCount uint       `sql:"not null;default:0" json:"events_count"`
 	Videos      []Video    `json:"videos,omitempty"`
 	VideosCount uint       `sql:"not null;default:0" json:"videos_count"`
-	Thumbnail   string     `json:"is_active"`
-	IsActive    bool       `sql:"index" json:"is_active"`
+	Thumbnail   string     `json:"thumbnail"`
+	IsActive    *bool      `sql:"not null;index" binding:"required" json:"is_active"`
 	UpdatedAt   time.Time  `json:"updated_at"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
 }
@@ -41,7 +41,7 @@ func (this *conferenceService) Conference() (*Conference, error) {
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["conference"]; ok {
-			err = conn.Where("slug = ?", v).First(&resource).Error
+			err = conn.Scopes(Active).Where("slug = ?", v).First(&resource).Error
 		}
 	}
 	return &resource, err
@@ -68,7 +68,7 @@ func (this *conferenceService) Conferences() (*[]Conference, error) {
 		if v, ok := this.params["page"]; ok {
 			page = v.(int)
 		}
-		err = query.Scopes(Paginate(limit, page)).Find(&collection).Error
+		err = query.Scopes(Active, Paginate(limit, page)).Find(&collection).Error
 	}
 	return &collection, err
 }

@@ -33,3 +33,7 @@ func Paginate(limit int, page int) func(db *gorm.DB) *gorm.DB {
 		return db.Limit(limit).Offset((page - 1) * limit)
 	}
 }
+
+func Active(db *gorm.DB) *gorm.DB {
+	return db.Where("is_active = true")
+}

@@ -16,9 +16,11 @@ type Event struct {
 	City           string     `sql:"index:idx_country_state_city_address" json:"city"`
 	State          string     `sql:"index:idx_country_state_city_address" json:"state"`
 	Address        string     `sql:"type:text;index:idx_country_state_city_address" json:"address"`
-	Speakers       []Speaker  `gorm:"many2many:events_speakers" json:"speakers,omitempty"`
+	Speakers       []Speaker  `gorm:"many2many:events_speakers" json:"speakers"`
 	VideosCount    uint       `sql:"not null;default:0" json:"videos_count"`
-	StartsAt       *time.Time `sql:"index" json:"started_at"`
+	Thumbnail      string     `json:"thumbnail"`
+	IsActive       *bool      `sql:"not null;index" binding:"required" json:"is_active"`
+	StartsAt       *time.Time `sql:"index" json:"starts_at"`
 	UpdatedAt      time.Time  `json:"updated_at"`
 	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
 }
@@ -40,7 +42,12 @@ func (this *eventService) Event() (*Event, error) {
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["event"]; ok {
-			err = conn.Where("id = ?", v).First(&resource).Error
+			speakers := make([]Speaker, 0)
+			err = conn.Scopes(Active).Where("id = ?", v).First(&resource).Error
+			if err == nil {
+				conn.Model(&resource).Related(&speakers, "Speakers")
+				resource.Speakers = speakers
+			}
 		}
 	}
 	return &resource, err
@@ -68,7 +75,7 @@ func (this *eventService) Events() (*[]Event, error) {
 		if v, ok := this.params["page"]; ok {
 			page = v.(int)
 		}
-		err = query.Scopes(Paginate(limit, page)).Find(&collection).Error
+		err = query.Scopes(Active, Paginate(limit, page)).Find(&collection).Error
 	}
 	return &collection, err
 }
