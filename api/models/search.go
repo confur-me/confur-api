@@ -23,36 +23,47 @@ func (this *searchService) Search() (*[]SearchResult, error) {
 		err        error
 	)
 	if _, ok := this.params["query"]; ok {
+		tagService := NewTagService(this.params)
+		if tags, err := tagService.Tags(); err == nil {
+			for _, item := range *tags {
+				searchResults := SearchResult{
+					Type:     "tag",
+					Resource: item,
+				}
+				collection = append(collection, searchResults)
+			}
+		}
+
 		confService := NewConferenceService(this.params)
 		if conferences, err := confService.Conferences(); err == nil {
 			for _, item := range *conferences {
-				searchResult := SearchResult{
+				searchResults := SearchResult{
 					Type:     "conference",
 					Resource: item,
 				}
-				collection = append(collection, searchResult)
+				collection = append(collection, searchResults)
 			}
 		}
 
 		eventService := NewEventService(this.params)
 		if events, err := eventService.Events(); err == nil {
 			for _, item := range *events {
-				searchResult := SearchResult{
+				searchResults := SearchResult{
 					Type:     "event",
 					Resource: item,
 				}
-				collection = append(collection, searchResult)
+				collection = append(collection, searchResults)
 			}
 		}
 
 		videoService := NewVideoService(this.params)
 		if videos, err := videoService.Videos(); err == nil {
 			for _, item := range *videos {
-				searchResult := SearchResult{
+				searchResults := SearchResult{
 					Type:     "video",
 					Resource: item,
 				}
-				collection = append(collection, searchResult)
+				collection = append(collection, searchResults)
 			}
 		}
 	}
