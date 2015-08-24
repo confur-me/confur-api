@@ -14,7 +14,7 @@
 		},
 		{
 			"ImportPath": "github.com/jinzhu/gorm",
-			"Rev": "c2dda88f9a8a0b5c73733e87689dc94cf2818fa2"
+			"Rev": "a536a106333f2ae5befb4da47ac7d9e180a25e87"
 		},
 		{
 			"ImportPath": "github.com/julienschmidt/httprouter",
@@ -32,6 +32,10 @@
 		{
 			"ImportPath": "github.com/olebedev/config",
 			"Rev": "13747a773c5077a2b8187d92f293fd07aa7c02f8"
+		},
+		{
+			"ImportPath": "github.com/qor/inflection",
+			"Rev": "45321e63b98c756df17369c027c1df89298e1288"
 		},
 		{
 			"ImportPath": "github.com/stephenmuss/ginerus",
