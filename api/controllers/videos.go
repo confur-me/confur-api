@@ -24,7 +24,8 @@ func (this *VideosController) Index(c *gin.Context) {
 	if videos, count, limit, offset, err := service.Videos(); err == nil {
 		writeRangeHeader(c, count, limit, offset)
 		if count == 0 {
-			status = 204
+			c.String(204, "")
+			return
 		} else if count > limit {
 			status = 206 // Partial request status
 		}

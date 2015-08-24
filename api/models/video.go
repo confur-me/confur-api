@@ -91,19 +91,20 @@ func (this *videoService) Videos() (*[]Video, int, int, int, error) {
 			for _, video := range collection {
 				videoIds = append(videoIds, video.ID)
 			}
-			rows, err1 := conn.Table("videos_tags").Select("video_id, tag_slug").Where("video_id IN (?)", videoIds).Rows()
-			if err1 == nil {
-				var (
-					videoId uint
-					tag     string
-				)
-				for rows.Next() {
-					rows.Scan(&videoId, &tag)
-					tags[videoId] = append(tags[videoId], tag)
-				}
-				for i, video := range collection {
-					video.Tags = tags[video.ID]
-					collection[i] = video
+			if len(videoIds) > 0 {
+				if rows, err1 := conn.Table("videos_tags").Select("video_id, tag_slug").Where("video_id IN (?)", videoIds).Rows(); err1 == nil {
+					var (
+						videoId uint
+						tag     string
+					)
+					for rows.Next() {
+						rows.Scan(&videoId, &tag)
+						tags[videoId] = append(tags[videoId], tag)
+					}
+					for i, video := range collection {
+						video.Tags = tags[video.ID]
+						collection[i] = video
+					}
 				}
 			}
 		}
