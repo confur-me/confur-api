@@ -13,9 +13,9 @@ type Conference struct {
 	Type        *string    `sql:"not null;index" binding:"required" json:"type"`
 	Scope       *string    `sql:"not null;index" json:"scope"`
 	Description string     `sql:"type:text" json:"description"`
-	Events      []Event    `json:"events,omitempty"`
+	Events      []Event    `json:"events,omitempty" gorm:"foreignkey:conference_slug"`
 	EventsCount uint       `sql:"not null;default:0" json:"events_count"`
-	Videos      []Video    `json:"videos,omitempty"`
+	Videos      []Video    `json:"videos,omitempty" gorm:"foreignkey:conference_slug"`
 	VideosCount uint       `sql:"not null;default:0" json:"videos_count"`
 	Thumbnail   string     `json:"thumbnail"`
 	IsActive    *bool      `sql:"not null;index" binding:"required" json:"is_active"`
@@ -67,6 +67,9 @@ func (this *conferenceService) Conferences() (*[]Conference, error) {
 		}
 		if v, ok := this.params["page"]; ok {
 			page = v.(int)
+		}
+		if _, ok := this.params["shuffle"]; ok {
+			query = query.Where("random() < 0.1")
 		}
 		err = query.Scopes(Active, Paginate(limit, page)).Find(&collection).Error
 	}

@@ -18,10 +18,17 @@ func (this *VideosController) Show(c *gin.Context) {
 }
 
 func (this *VideosController) Index(c *gin.Context) {
-	opts := *params(c, "conference", "tag", "event")
+	status := 200
+	opts := *params(c, "conference", "tag", "event", "shuffle")
 	service := models.NewVideoService(opts)
-	if videos, err := service.Videos(); err == nil {
-		c.JSON(200, videos)
+	if videos, count, limit, offset, err := service.Videos(); err == nil {
+		writeRangeHeader(c, count, limit, offset)
+		if count == 0 {
+			status = 204
+		} else if count > limit {
+			status = 206 // Partial request status
+		}
+		c.JSON(status, videos)
 	} else {
 		c.JSON(500, err)
 	}

@@ -7,9 +7,7 @@ import (
 )
 
 func FindBy(field string, value interface{}) func(db *gorm.DB) *gorm.DB {
-	var (
-		condition string = "= ?"
-	)
+	condition := "= ?"
 
 	return func(db *gorm.DB) *gorm.DB {
 		fmt.Println(reflect.TypeOf(value))
@@ -32,6 +30,16 @@ func Paginate(limit int, page int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Limit(limit).Offset((page - 1) * limit)
 	}
+}
+
+func GetRange(limit int, offset int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Limit(limit).Offset(offset)
+	}
+}
+
+func Unpaginate(db *gorm.DB) *gorm.DB {
+	return db.Offset(-1).Limit(-1)
 }
 
 func Active(db *gorm.DB) *gorm.DB {

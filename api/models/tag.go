@@ -7,11 +7,12 @@ import (
 )
 
 type Tag struct {
-	Slug string `gorm:"primary_key" json:"slug"`
-	//Videos      []Video    `gorm:"many2many:videos_tags" json:"videos,omitempty"`
+	Slug        string     `gorm:"primary_key" json:"slug"`
+	Videos      []Video    `gorm:"many2many:videos_tags;foreignkey:tag_slug" json:"videos,omitempty"`
 	VideosCount uint       `json:"videos_count"`
 	DeletedAt   *time.Time `json:"deleted_at,omitempty"`
-	//TODO: Synonyms []TagSynonym `json:"synonyms"`
+	TagAliases  []TagAlias `gorm:"foreignkey:tag_slug" json:"-"`
+	Aliases     []string   `sql:"-" json:"aliases,omitempty"`
 }
 
 type tagService struct {
@@ -47,6 +48,7 @@ func (this *tagService) Tags() (*[]Tag, error) {
 		if v, ok := this.params["query"]; ok {
 			// FIXME: CHECK injection possibility
 			query = query.Where("slug ILIKE ?", fmt.Sprintf("%%%v%%", v))
+			// TODO: find in tag_alias, merge results here
 		}
 		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {

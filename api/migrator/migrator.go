@@ -14,6 +14,7 @@ func DbDrop() {
 		d.DropTable(&models.Tag{})
 		d.DropTable(&models.User{})
 		d.DropTable(&models.Speaker{})
+		d.DropTable(&models.TagAlias{})
 	}
 }
 
@@ -25,6 +26,7 @@ func DbCreate() {
 		d.CreateTable(&models.Tag{})
 		d.CreateTable(&models.User{})
 		d.CreateTable(&models.Speaker{})
+		d.CreateTable(&models.TagAlias{})
 	}
 }
 
@@ -37,6 +39,7 @@ func DbMigrate() {
 			&models.Tag{},
 			&models.User{},
 			&models.Speaker{},
+			&models.TagAlias{},
 		)
 	}
 }

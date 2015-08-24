@@ -18,7 +18,7 @@ func (this *EventsController) Show(c *gin.Context) {
 }
 
 func (this *EventsController) Index(c *gin.Context) {
-	opts := *params(c, "conference")
+	opts := *params(c, "conference", "shuffle")
 	service := models.NewEventService(opts)
 	if events, err := service.Events(); err == nil {
 		c.JSON(200, events)

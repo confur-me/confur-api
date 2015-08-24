@@ -7,22 +7,24 @@ import (
 )
 
 type Event struct {
-	ID             uint       `gorm:"primary_key" json:"id"`
-	ConferenceSlug *string    `sql:"not null;index" binding:"required" json:"conference_slug"`
-	Scope          *string    `sql:"not null;index" json:"scope" binding:"required"`
-	Title          string     `sql:"type:text" binding:"required" json:"title"`
-	Description    string     `sql:"type:text" json:"description"`
-	Country        string     `sql:"index:idx_country_state_city_address" json:"country"`
-	City           string     `sql:"index:idx_country_state_city_address" json:"city"`
-	State          string     `sql:"index:idx_country_state_city_address" json:"state"`
-	Address        string     `sql:"type:text;index:idx_country_state_city_address" json:"address"`
-	Speakers       []Speaker  `gorm:"many2many:events_speakers" json:"speakers"`
-	VideosCount    uint       `sql:"not null;default:0" json:"videos_count"`
-	Thumbnail      string     `json:"thumbnail"`
-	IsActive       *bool      `sql:"not null;index" binding:"required" json:"is_active"`
-	StartsAt       *time.Time `sql:"index" json:"starts_at"`
-	UpdatedAt      time.Time  `json:"updated_at"`
-	DeletedAt      *time.Time `json:"deleted_at,omitempty"`
+	ID             uint        `gorm:"primary_key" json:"id"`
+	ConferenceSlug *string     `sql:"not null;index" binding:"required" json:"conference_slug"`
+	Conference     *Conference `json:"conference,omitempty" gorm:"foreignkey:conference_slug"`
+	Scope          *string     `sql:"not null;index" json:"scope" binding:"required"`
+	Title          string      `sql:"type:text" binding:"required" json:"title"`
+	Description    string      `sql:"type:text" json:"description"`
+	Country        string      `sql:"index:idx_country_state_city_address" json:"country"`
+	City           string      `sql:"index:idx_country_state_city_address" json:"city"`
+	State          string      `sql:"index:idx_country_state_city_address" json:"state"`
+	Address        string      `sql:"type:text;index:idx_country_state_city_address" json:"address"`
+	Speakers       *[]Speaker  `gorm:"many2many:events_speakers" json:"speakers,omitempty"`
+	Videos         *[]Video    `json:"videos,omitempty"`
+	VideosCount    uint        `sql:"not null;default:0" json:"videos_count"`
+	Thumbnail      string      `json:"thumbnail"`
+	IsActive       *bool       `sql:"not null;index" binding:"required" json:"is_active"`
+	StartsAt       *time.Time  `sql:"index" json:"starts_at"`
+	UpdatedAt      time.Time   `json:"updated_at"`
+	DeletedAt      *time.Time  `json:"deleted_at,omitempty"`
 }
 
 type eventService struct {
@@ -42,12 +44,7 @@ func (this *eventService) Event() (*Event, error) {
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["event"]; ok {
-			speakers := make([]Speaker, 0)
 			err = conn.Scopes(Active).Where("id = ?", v).First(&resource).Error
-			if err == nil {
-				conn.Model(&resource).Related(&speakers, "Speakers")
-				resource.Speakers = speakers
-			}
 		}
 	}
 	return &resource, err
@@ -67,6 +64,9 @@ func (this *eventService) Events() (*[]Event, error) {
 			// FIXME: CHECK injection possibility
 			query = query.Where("title ILIKE ?", fmt.Sprintf("%%%v%%", v))
 		}
+		if _, ok := this.params["shuffle"]; ok {
+			query = query.Where("random() < 0.1")
+		}
 		if v, ok := this.params["limit"]; ok {
 			if v.(int) <= 50 {
 				limit = v.(int)
@@ -75,7 +75,7 @@ func (this *eventService) Events() (*[]Event, error) {
 		if v, ok := this.params["page"]; ok {
 			page = v.(int)
 		}
-		err = query.Scopes(Active, Paginate(limit, page)).Find(&collection).Error
+		err = query.Scopes(Active, Paginate(limit, page)).Preload("Conference").Find(&collection).Error
 	}
 	return &collection, err
 }

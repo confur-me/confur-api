@@ -57,7 +57,7 @@ func (this *searchService) Search() (*[]SearchResult, error) {
 		}
 
 		videoService := NewVideoService(this.params)
-		if videos, err := videoService.Videos(); err == nil {
+		if videos, _, _, _, err := videoService.Videos(); err == nil {
 			for _, item := range *videos {
 				searchResults := SearchResult{
 					Type:     "video",
