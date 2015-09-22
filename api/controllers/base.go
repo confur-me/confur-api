@@ -18,7 +18,9 @@ func params(c *gin.Context, p ...string) *map[string]interface{} {
 		params["query"] = query
 	}
 	if limit := c.Request.Form.Get("limit"); limit != "" {
-		params["limit"] = limit
+		if limit, err := strconv.Atoi(limit); err == nil {
+			params["limit"] = limit
+		}
 	}
 	if limit, offset, ok := pagination(c); ok {
 		params["limit"] = limit
