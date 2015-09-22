@@ -17,11 +17,13 @@ func params(c *gin.Context, p ...string) *map[string]interface{} {
 	if query := c.Request.Form.Get("q"); query != "" {
 		params["query"] = query
 	}
+	if limit := c.Request.Form.Get("limit"); limit != "" {
+		params["limit"] = limit
+	}
 	if limit, offset, ok := pagination(c); ok {
 		params["limit"] = limit
 		params["offset"] = offset
 	}
-
 	for _, param := range p {
 		if v := c.Request.Form.Get(param); v != "" {
 			if params[param] == nil {
