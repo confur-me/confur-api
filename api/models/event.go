@@ -21,7 +21,7 @@ type Event struct {
 	Videos         *[]Video    `json:"videos,omitempty"`
 	VideosCount    uint        `sql:"not null;default:0" json:"videos_count"`
 	Thumbnail      string      `json:"thumbnail"`
-	IsActive       *bool       `sql:"not null;index" binding:"required" json:"is_active"`
+	IsActive       *bool       `sql:"not null;index" binding:"required" json:"-"`
 	StartsAt       *time.Time  `sql:"index" json:"starts_at"`
 	UpdatedAt      time.Time   `json:"updated_at"`
 	DeletedAt      *time.Time  `json:"deleted_at,omitempty"`
