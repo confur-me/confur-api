@@ -44,7 +44,7 @@ func (this *eventService) Event() (*Event, error) {
 	)
 	if conn, ok := db.Connection(); ok {
 		if v, ok := this.params["event"]; ok {
-			err = conn.Scopes(Active).Where("id = ?", v).First(&resource).Error
+			err = conn.Scopes(Active).Where("id = ?", v).Preload("Conference").First(&resource).Error
 		}
 	}
 	return &resource, err
